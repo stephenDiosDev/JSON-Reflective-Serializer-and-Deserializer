@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<serialized>
+     <object class="Solution.ObjectC" id="0">
+          <field declaringclass="Solution.ObjectC" name="a">
+               <reference>1</reference>
+          </field>
+     </object>
+     <object class="[I" id="1" length="5">
+          <value>0</value>
+          <value>0</value>
+          <value>0</value>
+          <value>3</value>
+          <value>0</value>
+     </object>
+</serialized>

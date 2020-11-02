@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<serialized>
+     <object class="Solution.ObjectB" id="0">
+          <field declaringclass="Solution.ObjectB" name="z">
+               <value>true</value>
+          </field>
+          <field declaringclass="Solution.ObjectB" name="other">
+               <reference>1</reference>
+          </field>
+     </object>
+     <object class="Solution.ObjectB" id="1">
+          <field declaringclass="Solution.ObjectB" name="z">
+               <value>false</value>
+          </field>
+          <field declaringclass="Solution.ObjectB" name="other">
+               <reference>0</reference>
+          </field>
+     </object>
+</serialized>

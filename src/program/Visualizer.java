@@ -17,10 +17,8 @@ public class Visualizer {
      * Run the user menu, collecting and processing input and returning the arraylist
      * containing the user's selections to Sender.java
      */
-    public ArrayList<Object> userSelectionMenu(Scanner scan) {
-
-
-        scan = new Scanner(System.in);
+    public ArrayList<Object> userSelectionMenu() {
+        Scanner scan = new Scanner(System.in);
 
         this.printIntro();
         while(!scan.nextLine().equalsIgnoreCase("send")) {

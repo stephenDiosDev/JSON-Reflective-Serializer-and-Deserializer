@@ -1,7 +1,6 @@
 package program;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Sender {
     private Serializer serializer;
@@ -14,10 +13,9 @@ public class Sender {
     }
 
     private void driver() {
-        Scanner in = new Scanner(System.in);
         serializer = new Serializer();
         visualizer = new Visualizer();
-        objects = visualizer.userSelectionMenu(in);
+        objects = visualizer.userSelectionMenu();
 
         //networking code
     }

@@ -32,19 +32,28 @@ public class Visualizer {
                     System.out.println("Unable to create object1!");
             }
             else if(input.contains("create object2")) {
-
+                if(userObjects.add(this.createObject2(scan)))
+                    System.out.println("Successfully created object2!");
+                else
+                    System.out.println("Unable to create object2!");
             }
             else if(input.contains("create object3")) {
-
+                if(userObjects.add(this.createObject3(scan)))
+                    System.out.println("Successfully created object3!");
+                else
+                    System.out.println("Unable to create object3!");
             }
             else if(input.contains("create object4")) {
-
+                if(userObjects.add(this.createObject4(scan)))
+                    System.out.println("Successfully created object4!");
+                else
+                    System.out.println("Unable to create object4!");
             }
             else if(input.contains("create object5")) {
-
-            }
-            else {
-                System.out.println("Invalid Command");
+                if(userObjects.add(this.createObject5(scan)))
+                    System.out.println("Successfully created object5!");
+                else
+                    System.out.println("Unable to create object5!");
             }
 
             input = scan.nextLine();
@@ -86,9 +95,87 @@ public class Visualizer {
         System.out.print("\nPlease enter a double value: ");
         doubleValue = scan.nextDouble();
 
+        System.out.print("\nPlease enter a boolean value (true or false): ");
+        boolValue = scan.nextBoolean();
+
+        return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
+    }
+
+    private Object createObject2(Scanner scan) {
+        int intValue;
+        double doubleValue;
+        boolean boolValue;
+
+        System.out.print("\nPlease enter an integer value: ");
+        intValue = scan.nextInt();
+
+        System.out.print("\nPlease enter a double value: ");
+        doubleValue = scan.nextDouble();
+
         System.out.println("\nPlease enter a boolean value (true or false): ");
         boolValue = scan.nextBoolean();
 
         return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
+    }
+
+    private Object createObject3(Scanner scan) {
+        int intValue;
+        double doubleValue;
+        boolean boolValue;
+
+        System.out.print("\nPlease enter an integer value: ");
+        intValue = scan.nextInt();
+
+        System.out.print("\nPlease enter a double value: ");
+        doubleValue = scan.nextDouble();
+
+        System.out.println("\nPlease enter a boolean value (true or false): ");
+        boolValue = scan.nextBoolean();
+
+        return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
+    }
+
+    private Object createObject4(Scanner scan) {
+        int intValue;
+        double doubleValue;
+        boolean boolValue;
+
+        System.out.print("\nPlease enter an integer value: ");
+        intValue = scan.nextInt();
+
+        System.out.print("\nPlease enter a double value: ");
+        doubleValue = scan.nextDouble();
+
+        System.out.println("\nPlease enter a boolean value (true or false): ");
+        boolValue = scan.nextBoolean();
+
+        return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
+    }
+
+    private Object createObject5(Scanner scan) {
+        int intValue;
+        double doubleValue;
+        boolean boolValue;
+
+        System.out.print("\nPlease enter an integer value: ");
+        intValue = scan.nextInt();
+
+        System.out.print("\nPlease enter a double value: ");
+        doubleValue = scan.nextDouble();
+
+        System.out.println("\nPlease enter a boolean value (true or false): ");
+        boolValue = scan.nextBoolean();
+
+        return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
+    }
+
+    public String toString() {
+        String result = "";
+        for(Object o : userObjects) {
+            result += o.toString();
+            result += "\n";
+        }
+
+        return result;
     }
 }

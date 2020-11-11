@@ -18,5 +18,6 @@ public class Sender {
         objects = visualizer.userSelectionMenu();
 
         //networking code
+        System.out.println(visualizer.toString());
     }
 }

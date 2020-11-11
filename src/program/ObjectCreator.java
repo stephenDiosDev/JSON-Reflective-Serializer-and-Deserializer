@@ -53,7 +53,7 @@ class AllPrimitive {
     }
 
     public String toString() {
-        String result = "a: " + Integer.toString(getA()) + " b: " + Double.toString(getB()) + " c: " + Boolean.toString(isC());
+        String result = "[a: " + Integer.toString(getA()) + "] [b: " + Double.toString(getB()) + "] [c: " + Boolean.toString(isC()) + "]";
         return result;
     }
 }

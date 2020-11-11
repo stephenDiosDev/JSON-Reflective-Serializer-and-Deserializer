@@ -86,6 +86,16 @@ class ArrayPrimitives {
             myArr[i] = input[i];
         }
     }
+
+    public String toString() {
+        String result = "";
+
+        for(int i = 0; i < myArr.length; i++) {
+            result += "[Index: " + i + "]: " + Integer.toString(myArr[i]) + "\n";
+        }
+
+        return result;
+    }
 }
 
 class ArrayReferences {

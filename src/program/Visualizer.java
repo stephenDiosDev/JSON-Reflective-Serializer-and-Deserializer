@@ -119,18 +119,20 @@ public class Visualizer {
     }
 
     private Object createObject3(Scanner scan) {
-        int intValue;
-        double doubleValue;
-        boolean boolValue;
+        int arr[];
+        String ints;
+        ArrayList<Integer> input = new ArrayList<>();
 
-        System.out.print("\nPlease enter an integer value: ");
-        intValue = scan.nextInt();
+        System.out.print("\nPlease enter integer values separated by a space: ");
+        ints = scan.nextLine();
+        
 
-        System.out.print("\nPlease enter a double value: ");
-        doubleValue = scan.nextDouble();
+        while(1) {
+            input.add(Integer.parseInt(ints));
+            ints = ints.substring(0, ints.indexOf(" "));
+        }
 
-        System.out.println("\nPlease enter a boolean value (true or false): ");
-        boolValue = scan.nextBoolean();
+
 
         return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
     }

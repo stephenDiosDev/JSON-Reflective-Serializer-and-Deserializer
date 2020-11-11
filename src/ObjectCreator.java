@@ -92,6 +92,7 @@ class InstanceJavaCollection {
 public class ObjectCreator {
     /* TODO
     classify 5 object types based of the 5 specified in the assignment description
+    Implement method to create each type with parameters and return it
 
      */
 

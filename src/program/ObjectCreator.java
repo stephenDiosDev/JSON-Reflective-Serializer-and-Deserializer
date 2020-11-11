@@ -51,6 +51,11 @@ class AllPrimitive {
     public void setC(boolean c) {
         this.c = c;
     }
+
+    public String toString() {
+        String result = "a: " + Integer.toString(getA()) + " b: " + Double.toString(getB()) + " c: " + Boolean.toString(isC());
+        return result;
+    }
 }
 
 class ComplexWithReferences {

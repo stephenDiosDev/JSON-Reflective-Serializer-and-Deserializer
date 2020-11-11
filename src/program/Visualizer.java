@@ -8,6 +8,7 @@ import java.util.Scanner;
  */
 public class Visualizer {
     private ObjectCreator objectCreator;
+    public ArrayList<Object> userObjects = new ArrayList<>();
 
     public Visualizer() {
         objectCreator = new ObjectCreator();
@@ -16,10 +17,10 @@ public class Visualizer {
      * Run the user menu, collecting and processing input and returning the arraylist
      * containing the user's selections to Sender.java
      */
-    public ArrayList<Object> userSelectionMenu() {
-        ArrayList<Object> userObjects = new ArrayList<>();
+    public ArrayList<Object> userSelectionMenu(Scanner scan) {
 
-        Scanner scan = new Scanner(System.in);
+
+        scan = new Scanner(System.in);
 
         this.printIntro();
         while(!scan.nextLine().equalsIgnoreCase("send")) {

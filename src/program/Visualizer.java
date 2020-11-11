@@ -1,3 +1,5 @@
+package program;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -25,7 +27,10 @@ public class Visualizer {
                 this.listCommands();
             }
             else if(scan.nextLine().equalsIgnoreCase("create object1")) {
-
+                if(userObjects.add(this.createObject1(scan)))
+                    System.out.println("Successfully created object1!");
+                else
+                    System.out.println("Unable to create object1!");
             }
             else if(scan.nextLine().equalsIgnoreCase("create object2")) {
 
@@ -62,5 +67,22 @@ public class Visualizer {
         System.out.println("create object5 --> create an object of type object5");
         System.out.println();
 
+    }
+
+    private Object createObject1(Scanner scan) {
+        int intValue;
+        double doubleValue;
+        boolean boolValue;
+
+        System.out.print("\nPlease enter an integer value: ");
+        intValue = scan.nextInt();
+
+        System.out.print("\nPlease enter a double value: ");
+        doubleValue = scan.nextDouble();
+
+        System.out.println("\nPlease enter a boolean value (true or false): ");
+        boolValue = scan.nextBoolean();
+
+        return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
     }
 }

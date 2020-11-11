@@ -1,3 +1,5 @@
+package program;
+
 public class ReflectiveObjectSerialization {
     private static Sender sender;
 

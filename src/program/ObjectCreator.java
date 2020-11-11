@@ -1,3 +1,5 @@
+package program;
+
 /**
  * Creates an object based off of user input and 5 premade objects. User can specify the type, amount and values
  * for any primitive in the premade object. Once the user is finished, they can specify to send the object
@@ -95,5 +97,9 @@ public class ObjectCreator {
     Implement method to create each type with parameters and return it
 
      */
+
+    public AllPrimitive createAllPrimitive(int a, double b, boolean c) {
+        return new AllPrimitive(a, b, c);
+    }
 
 }

@@ -19,32 +19,39 @@ public class Visualizer {
      */
     public ArrayList<Object> userSelectionMenu() {
         Scanner scan = new Scanner(System.in);
-
         this.printIntro();
-        while(!scan.nextLine().equalsIgnoreCase("send")) {
-            if(scan.nextLine().equalsIgnoreCase("help")) {
+        String input = scan.nextLine();
+        while(!input.contains("send")) {
+            if(input.contains("help")) {
                 this.listCommands();
             }
-            else if(scan.nextLine().equalsIgnoreCase("create object1")) {
+            else if(input.contains("create object1")) {
                 if(userObjects.add(this.createObject1(scan)))
                     System.out.println("Successfully created object1!");
                 else
                     System.out.println("Unable to create object1!");
             }
-            else if(scan.nextLine().equalsIgnoreCase("create object2")) {
+            else if(input.contains("create object2")) {
 
             }
-            else if(scan.nextLine().equalsIgnoreCase("create object3")) {
+            else if(input.contains("create object3")) {
 
             }
-            else if(scan.nextLine().equalsIgnoreCase("create object4")) {
+            else if(input.contains("create object4")) {
 
             }
-            else if(scan.nextLine().equalsIgnoreCase("create object5")) {
+            else if(input.contains("create object5")) {
 
             }
+            else {
+                System.out.println("Invalid Command");
+            }
+
+            input = scan.nextLine();
         }
 
+        scan.close();
+        System.out.println("\nFinished creating objects...");
         return userObjects;
     }
 

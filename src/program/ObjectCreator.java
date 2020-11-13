@@ -167,10 +167,29 @@ class ArrayReferences {
     }
 
     public String toString() {
-        String result = "";
+        String result = "\n";
 
         for(int i = 0; i < myArr.length; i++) {
-            result += myArr.toString() + "\n";
+            if(myArr[i] instanceof AllPrimitive) {
+                AllPrimitive a = (AllPrimitive) myArr[i];
+                result += a.toString() + "\n";
+            }
+            else if(myArr[i] instanceof ComplexWithReferences) {
+                ComplexWithReferences a = (ComplexWithReferences) myArr[i];
+                result += a.toString() + "\n";
+            }
+            else if(myArr[i] instanceof ArrayPrimitives) {
+                ArrayPrimitives a = (ArrayPrimitives) myArr[i];
+                result += a.toString() + "\n";
+            }
+            else if(myArr[i] instanceof ArrayReferences) {
+                ArrayReferences a = (ArrayReferences) myArr[i];
+                result += a.toString() + "\n";
+            }
+            else if(myArr[i] instanceof InstanceJavaCollection) {
+                InstanceJavaCollection a = (InstanceJavaCollection) myArr[i];
+                result += a.toString() + "\n";
+            }
         }
 
         return result;

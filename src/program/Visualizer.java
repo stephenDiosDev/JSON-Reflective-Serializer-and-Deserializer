@@ -155,6 +155,8 @@ public class Visualizer {
                     objs.add(createObject4(scan));
                 else if(input.contains("create object5"))
                     objs.add(createObject5(scan));
+                else
+                    System.out.println("Invalid command. Enter \"create objectx\" commands, and \"finish\" when done");
             }
 
             input = scan.nextLine();

@@ -151,6 +151,31 @@ public class ObjectCreationTest {
     @Test
     public void testArrayReferencesMultipleObjects() {
         //multiple array of references (but all separate)
+        String data1 = "create object4\n" + "create object1\n" + "1\n" + "-2.02\n" + "false\n" +
+                "create object1\n" + "-65\n" + "300.1\n" + "false\n" +
+                "create object3\n" + "1\n" + "2\n" + "3\n" + "end\n" +
+                "create object2\n" + "12\n" + "22.2\n" + "true\n" + "69\n" + "102.54\n" + "false\n" +
+                "23\n" + "24\n" + "87\n" + "10000\n" + "end\n" + "finish\n";
+
+        String data2 = "create object4\n" + "create object1\n" + "1\n" + "-2.02\n" + "false\n" +
+                "create object4\n" + "create object1\n" + "-65\n" + "300.1\n" + "false\n" + "finish\n" +
+                "create object3\n" + "1\n" + "2\n" + "3\n" + "end\n" + "finish\n" + "send\n";
+
+        String data = data1 + data2;
+
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+
+        send.driver();
+
+        assertEquals("\n\n[a: 1] [b: -2.02] [c: false]\n" +
+                "\n[a: -65] [b: 300.1] [c: false]\n\n" +
+                "[Index: 0]: 1\n" + "[Index: 1]: 2\n" + "[Index: 2]: 3\n\n" +
+                "\n[a: 12] [b: 22.2] [c: true]\n" +
+                "\n[a: 69] [b: 102.54] [c: false]\n" +
+                "\n[Index: 0]: 23\n" + "[Index: 1]: 24\n" + "[Index: 2]: 87\n" + "[Index: 3]: 10000\n\n\n" +
+                "\n\n[a: 1] [b: -2.02] [c: false]\n" +
+                "\n\n[a: -65] [b: 300.1] [c: false]\n\n" +
+                "\n[Index: 0]: 1" + "\n[Index: 1]: 2" + "\n[Index: 2]: 3\n\n\n", send.toString());
     }
 
     //reverts system.out to normal and allows us to access whats stored in baos

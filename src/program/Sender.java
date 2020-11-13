@@ -18,7 +18,6 @@ public class Sender {
 
     public void driver() {
         objects = visualizer.userSelectionMenu();
-
     }
 
     public String toString() {

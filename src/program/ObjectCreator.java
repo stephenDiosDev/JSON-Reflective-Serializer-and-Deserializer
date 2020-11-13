@@ -117,4 +117,8 @@ public class ObjectCreator {
         return new AllPrimitive(a, b, c);
     }
 
+    public ArrayPrimitives createArrayPrimitives(int[] inputArray) {
+        return new ArrayPrimitives(inputArray);
+    }
+
 }

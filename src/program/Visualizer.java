@@ -120,21 +120,23 @@ public class Visualizer {
 
     private Object createObject3(Scanner scan) {
         int arr[];
-        String ints;
-        ArrayList<Integer> input = new ArrayList<>();
+        ArrayList<Integer> nums = new ArrayList<>();
 
-        System.out.print("\nPlease enter integer values separated by a space: ");
-        ints = scan.nextLine();
-        
+        System.out.print("\nPlease enter integer values and press enter after one, write \"end\" without quotes to finish entering: ");
 
-        while(1) {
-            input.add(Integer.parseInt(ints));
-            ints = ints.substring(0, ints.indexOf(" "));
+        String input = scan.nextLine();
+        while(!input.contains("end")) {
+            nums.add(Integer.parseInt(input));
+            input = scan.nextLine();
         }
 
+        //fill array
+        arr = new int[nums.size()];
+        for(int i = 0; i < arr.length; i++) {
+            arr[i] = nums.get(i);
+        }
 
-
-        return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
+        return objectCreator.createArrayPrimitives(arr);
     }
 
     private Object createObject4(Scanner scan) {

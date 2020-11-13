@@ -110,6 +110,16 @@ public class ObjectCreationTest {
                     "\n[Index: 0]: 1010\n\n", send.toString());
     }
 
+    @Test
+    public void testArrayReferencesSingleObject() {
+
+    }
+
+    @Test
+    public void testArrayReferencesMultipleObjects() {
+
+    }
+
     //reverts system.out to normal and allows us to access whats stored in baos
     public static void cleanup() {
 

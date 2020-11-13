@@ -8,6 +8,8 @@ package program;
 
 //below are the 5 object types described on page 3 of the assignment description in order
 
+import java.lang.reflect.Array;
+
 /**
  * A class with only primitives as its instance variables
   */
@@ -146,7 +148,33 @@ class ArrayPrimitives {
 }
 
 class ArrayReferences {
+    private Object[] myArr;
 
+    public ArrayReferences() {
+        setMyArr(new Object[] {new AllPrimitive(1,2.2, true), new AllPrimitive(6, 7.89, false)});
+    }
+
+    public ArrayReferences(Object[] inputArr) {
+        setMyArr(inputArr);
+    }
+
+    public Object[] getMyArr() {
+        return myArr;
+    }
+
+    public void setMyArr(Object[] myArr) {
+        this.myArr = myArr;
+    }
+
+    public String toString() {
+        String result = "";
+
+        for(int i = 0; i < myArr.length; i++) {
+            result += myArr.toString() + "\n";
+        }
+
+        return result;
+    }
 }
 
 class InstanceJavaCollection {
@@ -170,6 +198,10 @@ public class ObjectCreator {
 
     public ComplexWithReferences createComplexWithReferences(AllPrimitive a, AllPrimitive b, ArrayPrimitives c) {
         return new ComplexWithReferences(a, b, c);
+    }
+
+    public ArrayReferences createArrayReferences(Object[] input) {
+        return new ArrayReferences(input);
     }
 
 }

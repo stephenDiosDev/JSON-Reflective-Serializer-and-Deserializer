@@ -137,20 +137,36 @@ public class Visualizer {
     }
 
     private Object createObject4(Scanner scan) {
-        int intValue;
-        double doubleValue;
-        boolean boolValue;
+        Object[] arr;
+        ArrayList<Object> objs = new ArrayList<>();
 
-        System.out.print("\nPlease enter an integer value: ");
-        intValue = scan.nextInt();
+        System.out.println("\nPlease enter \"create objectx\" commands with x subbed for a number. Write \"finish\" when you are done");
 
-        System.out.print("\nPlease enter a double value: ");
-        doubleValue = scan.nextDouble();
+        String input = scan.nextLine();
+        while(!input.contains("finish")) {
+            if(!input.equals("")) {
+                if(input.contains("create object1"))
+                    objs.add(createObject1(scan));
+                else if(input.contains("create object2"))
+                    objs.add(createObject2(scan));
+                else if(input.contains("create object3"))
+                    objs.add(createObject3(scan));
+                else if(input.contains("create object4"))
+                    objs.add(createObject4(scan));
+                else if(input.contains("create object5"))
+                    objs.add(createObject5(scan));
+            }
 
-        System.out.println("\nPlease enter a boolean value (true or false): ");
-        boolValue = scan.nextBoolean();
+            input = scan.nextLine();
+        }
 
-        return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
+        //populate object array
+        arr = new Object[objs.size()];
+        for(int i = 0; i < objs.size(); i++) {
+            arr[i] = objs.get(i);
+        }
+
+        return objectCreator.createArrayReferences(arr);
     }
 
     private Object createObject5(Scanner scan) {

@@ -53,13 +53,60 @@ class AllPrimitive {
     }
 
     public String toString() {
-        String result = "[a: " + Integer.toString(getA()) + "] [b: " + Double.toString(getB()) + "] [c: " + Boolean.toString(isC()) + "]";
+        String result = "\n[a: " + Integer.toString(getA()) + "] [b: " + Double.toString(getB()) + "] [c: " + Boolean.toString(isC()) + "]";
         return result;
     }
 }
 
+/**
+ * A class that has instances of AllPrimitive and ArrayPrimitives
+ */
 class ComplexWithReferences {
+    private AllPrimitive obj1;
+    private AllPrimitive obj2;
 
+    private ArrayPrimitives arr1;
+
+    public ComplexWithReferences() {
+        obj1 = new AllPrimitive(1,2,true);
+        obj2 = new AllPrimitive(2228, 102947.9754, false);
+        arr1 = new ArrayPrimitives(new int[] {9,8,7,6,5,4,3,2,1});
+    }
+
+    public ComplexWithReferences(AllPrimitive obj1, AllPrimitive obj2, ArrayPrimitives arr1) {
+        this.setObj1(obj1);
+        this.setObj2(obj2);
+        this.setArr1(arr1);
+    }
+
+    public AllPrimitive getObj1() {
+        return obj1;
+    }
+
+    public AllPrimitive getObj2() {
+        return obj2;
+    }
+
+    public ArrayPrimitives getArr1() {
+        return arr1;
+    }
+
+    public void setObj1(AllPrimitive obj1) {
+        this.obj1 = obj1;
+    }
+
+    public void setObj2(AllPrimitive obj2) {
+        this.obj2 = obj2;
+    }
+
+    public void setArr1(ArrayPrimitives arr1) {
+        this.arr1 = arr1;
+    }
+
+    public String toString() {
+        String result = getObj1().toString() + "\n" + getObj2().toString() + "\n" + getArr1().toString();
+        return result;
+    }
 }
 
 /**
@@ -88,7 +135,7 @@ class ArrayPrimitives {
     }
 
     public String toString() {
-        String result = "";
+        String result = "\n";
 
         for(int i = 0; i < myArr.length; i++) {
             result += "[Index: " + i + "]: " + Integer.toString(myArr[i]) + "\n";
@@ -119,6 +166,10 @@ public class ObjectCreator {
 
     public ArrayPrimitives createArrayPrimitives(int[] inputArray) {
         return new ArrayPrimitives(inputArray);
+    }
+
+    public ComplexWithReferences createComplexWithReferences(AllPrimitive a, AllPrimitive b, ArrayPrimitives c) {
+        return new ComplexWithReferences(a, b, c);
     }
 
 }

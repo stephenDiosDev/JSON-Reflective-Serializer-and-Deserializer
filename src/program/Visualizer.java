@@ -102,20 +102,14 @@ public class Visualizer {
     }
 
     private Object createObject2(Scanner scan) {
-        int intValue;
-        double doubleValue;
-        boolean boolValue;
+        AllPrimitive a = (AllPrimitive) this.createObject1(scan);
+        scan.reset();
+        AllPrimitive b = (AllPrimitive) this.createObject1(scan);
+        scan.reset();
+        ArrayPrimitives c = (ArrayPrimitives) this.createObject3(scan);
+        scan.reset();
 
-        System.out.print("\nPlease enter an integer value: ");
-        intValue = scan.nextInt();
-
-        System.out.print("\nPlease enter a double value: ");
-        doubleValue = scan.nextDouble();
-
-        System.out.println("\nPlease enter a boolean value (true or false): ");
-        boolValue = scan.nextBoolean();
-
-        return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
+        return objectCreator.createComplexWithReferences(a, b, c);
     }
 
     private Object createObject3(Scanner scan) {
@@ -126,8 +120,11 @@ public class Visualizer {
 
         String input = scan.nextLine();
         while(!input.contains("end")) {
-            nums.add(Integer.parseInt(input));
+            if(!input.equals(""))
+                nums.add(Integer.parseInt(input));
+
             input = scan.nextLine();
+
         }
 
         //fill array

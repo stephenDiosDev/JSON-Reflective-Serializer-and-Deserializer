@@ -89,6 +89,27 @@ public class ObjectCreationTest {
                         send.toString());
     }
 
+    @Test
+    public void testObjectComplexWithReferencesMultipleObjects() {
+        String data1 = "create object2\n" + "1\n" + "2.2\n" + "true\n" + "100\n" + "202.22\n" + "true\n" +
+                        "99\n" + "100001\n" + "101\n" + "end\n";
+        String data2 = "create object2\n" + "-11\n" + "-4.2\n" + "false\n" + "-60\n" + "-902.22\n" + "true\n" +
+                        "1010\n" + "end\n" + "send\n";
+
+        String data = data1 + data2;
+
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+
+        send.driver();
+
+        assertEquals("\n[a: 1] [b: 2.2] [c: true]\n" +
+                    "\n[a: 100] [b: 202.22] [c: true]\n" +
+                    "\n[Index: 0]: 99" + "\n[Index: 1]: 100001" + "\n[Index: 2]: 101\n\n" +
+                    "\n[a: -11] [b: -4.2] [c: false]\n" +
+                    "\n[a: -60] [b: -902.22] [c: true]\n" +
+                    "\n[Index: 0]: 1010\n\n", send.toString());
+    }
+
     //reverts system.out to normal and allows us to access whats stored in baos
     public static void cleanup() {
 

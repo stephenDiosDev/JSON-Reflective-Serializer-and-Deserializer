@@ -9,6 +9,7 @@ package program;
 //below are the 5 object types described on page 3 of the assignment description in order
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * A class with only primitives as its instance variables
@@ -197,7 +198,71 @@ class ArrayReferences {
 }
 
 class InstanceJavaCollection {
+    private ArrayList<Object> list;
 
+    private AllPrimitive a;
+    private AllPrimitive b;
+    private AllPrimitive c;
+    private ArrayPrimitives arr;
+
+    public InstanceJavaCollection() {
+        setA(new AllPrimitive(1,2,true));
+        setB(new AllPrimitive(-1, -2, false));
+        setC(new AllPrimitive(3, 5069.8, true));
+        setArr(new ArrayPrimitives(new int[] {1,3,5,7,11,13,17,19}));
+    }
+
+    public InstanceJavaCollection(AllPrimitive a, AllPrimitive b, AllPrimitive c, ArrayPrimitives arr) {
+        setA(a);
+        setB(b);
+        setC(c);
+        setArr(arr);
+    }
+
+    public AllPrimitive getA() {
+        return a;
+    }
+
+    public AllPrimitive getB() {
+        return b;
+    }
+
+    public AllPrimitive getC() {
+        return c;
+    }
+
+    public ArrayPrimitives getArr() {
+        return arr;
+    }
+
+    public ArrayList<Object> getList() {
+        return list;
+    }
+
+    public void setA(AllPrimitive a) {
+        this.a = a;
+    }
+
+    public void setB(AllPrimitive b) {
+        this.b = b;
+    }
+
+    public void setC(AllPrimitive c) {
+        this.c = c;
+    }
+
+    public void setArr(ArrayPrimitives arr) {
+        this.arr = arr;
+    }
+
+    public void setList(ArrayList<Object> list) {
+        this.list = list;
+    }
+
+    public String toString() {
+        String result = "";
+        return result;
+    }
 }
 
 public class ObjectCreator {

@@ -12,12 +12,11 @@ public class Serializer {
     public static String serializeObject(Object source) {
         IdentityHashMap hashMap = new IdentityHashMap();
         int depth = 1;
-        String result = "{\n\t\"objects\": [";
+        String result = "";
 
         //turn this into a loop for all objects so it doesnt print the above multiple times
         result += jsonObject(source, depth + 1, hashMap);
 
-        result += "\t]\n}";
         return result;
     }
 
@@ -81,7 +80,22 @@ public class Serializer {
     }
 
     private static String jsonField(Field field, int depth) {
-        return "";
+        String tabs = tabs(depth);  //tab level for field elements
+        String tabInfo = tabs + "\t";
+        //array and any othe reference will need to have its own "object" entry
+        String result = tabs + "{\n" + tabInfo;
+        result += "\"name\": \"" + field.getName() + "\",\n";
+        result += tabInfo + "\"declaring class\": \"" + field.getDeclaringClass() + "\",\n";
+        //check if it is value or reference
+        if(field.getType().isPrimitive()) { //primitive, use value
+
+        }
+        else {  //reference
+
+        }
+
+
+        return result;
     }
 
 }

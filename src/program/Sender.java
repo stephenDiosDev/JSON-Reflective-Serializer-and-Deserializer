@@ -19,9 +19,16 @@ public class Sender {
 
         //figure out how this will translate into the hashmap thing
         //maybe move hashmap out here and pass it in?
+        String result = "{\n\t\"objects\": [";
         for(Object ob : objects) {
-            System.out.print(Serializer.serializeObject(ob));
+            result += Serializer.serializeObject(ob);
         }
+
+        //TODO: fix slight formatting issue with newlines and commas between separate objects in above loop
+
+        result += "\t]\n}";
+
+        System.out.println(result);
     }
 
     public String toString() {

@@ -172,20 +172,18 @@ public class Visualizer {
     }
 
     private Object createObject5(Scanner scan) {
-        int intValue;
-        double doubleValue;
-        boolean boolValue;
+        AllPrimitive a;
+        AllPrimitive b;
+        AllPrimitive c;
+        ArrayPrimitives arr;
 
-        System.out.print("\nPlease enter an integer value: ");
-        intValue = scan.nextInt();
+        a = (AllPrimitive) createObject1(scan);
+        b = (AllPrimitive) createObject1(scan);
+        c = (AllPrimitive) createObject1(scan);
 
-        System.out.print("\nPlease enter a double value: ");
-        doubleValue = scan.nextDouble();
+        arr = (ArrayPrimitives) createObject3(scan);
 
-        System.out.println("\nPlease enter a boolean value (true or false): ");
-        boolValue = scan.nextBoolean();
-
-        return objectCreator.createAllPrimitive(intValue, doubleValue, boolValue);
+        return objectCreator.createInstanceJavaCollection(a, b, c, arr);
     }
 
     public String toString() {

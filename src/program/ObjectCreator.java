@@ -210,6 +210,11 @@ class InstanceJavaCollection {
         setB(new AllPrimitive(-1, -2, false));
         setC(new AllPrimitive(3, 5069.8, true));
         setArr(new ArrayPrimitives(new int[] {1,3,5,7,11,13,17,19}));
+        list = new ArrayList<>();
+        list.add(a);
+        list.add(b);
+        list.add(c);
+        list.add(arr);
     }
 
     public InstanceJavaCollection(AllPrimitive a, AllPrimitive b, AllPrimitive c, ArrayPrimitives arr) {
@@ -217,6 +222,11 @@ class InstanceJavaCollection {
         setB(b);
         setC(c);
         setArr(arr);
+        list = new ArrayList<>();
+        list.add(a);
+        list.add(b);
+        list.add(c);
+        list.add(arr);
     }
 
     public AllPrimitive getA() {
@@ -261,16 +271,15 @@ class InstanceJavaCollection {
 
     public String toString() {
         String result = "";
+        for(Object ob : list) {
+            if(ob instanceof AllPrimitive || ob instanceof ArrayPrimitives)
+                result += ob.toString() + "\n";
+        }
         return result;
     }
 }
 
 public class ObjectCreator {
-    /* TODO
-    classify 5 object types based of the 5 specified in the assignment description
-    Implement method to create each type with parameters and return it
-
-     */
 
     public AllPrimitive createAllPrimitive(int a, double b, boolean c) {
         return new AllPrimitive(a, b, c);
@@ -286,6 +295,10 @@ public class ObjectCreator {
 
     public ArrayReferences createArrayReferences(Object[] input) {
         return new ArrayReferences(input);
+    }
+
+    public InstanceJavaCollection createInstanceJavaCollection(AllPrimitive a, AllPrimitive b, AllPrimitive c, ArrayPrimitives arr) {
+        return new InstanceJavaCollection(a,b,c,arr);
     }
 
 }

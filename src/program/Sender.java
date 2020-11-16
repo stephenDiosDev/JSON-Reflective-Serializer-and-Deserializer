@@ -18,7 +18,7 @@ public class Sender {
         objects = visualizer.userSelectionMenu();
 
         //figure out how this will translate into the hashmap thing
-        //maybe move hashmap out here and pass it in?
+        //maybe move hashmap out here and pass it in? Probably the best solution
         String result = "{\n\t\"objects\": [";
         for(Object ob : objects) {
             result += Serializer.serializeObject(ob);

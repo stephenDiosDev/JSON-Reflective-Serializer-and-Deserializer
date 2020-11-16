@@ -49,23 +49,29 @@ public class Serializer {
             hashMap.put(id, src.hashCode());
             result += "\"id\": \"" + id + "\",\n";
 
-            //hard coded here since I know none of my objects are of type array
-            String type = "object";
 
-            result += tabInfo + "\"type\": \"" + type + "\",\n";
-            result += tabInfo + "\"fields\": [\n";
-
-            //fields call
-            Field[] fields = src.getClass().getDeclaredFields();
-
-            for(int i = 0; i < fields.length; i++) {
-                result += tabInfo + "\t{\n";
-                result += jsonField(fields[i], depth + 1);
-                result += tabInfo + "\t}";
-                if(i != fields.length - 1)  //last element dont put comma
-                    result += ",";
-                result += "\n";
+            if(src.getClass().isArray()) {
+                String type = "array";
             }
+            else {
+                String type = "object";
+
+                result += tabInfo + "\"type\": \"" + type + "\",\n";
+                result += tabInfo + "\"fields\": [\n";
+
+                //fields call
+                Field[] fields = src.getClass().getDeclaredFields();
+
+                for(int i = 0; i < fields.length; i++) {
+                    result += tabInfo + "\t{\n";
+                    result += jsonField(src, fields[i], depth + 1);
+                    result += tabInfo + "\t}";
+                    if(i != fields.length - 1)  //last element dont put comma
+                        result += ",";
+                    result += "\n";
+                }
+            }
+
 
             result += tabInfo + "]\n";
 
@@ -79,15 +85,21 @@ public class Serializer {
         return result;
     }
 
-    private static String jsonField(Field field, int depth) {
+    private static String jsonField(Object source, Field field, int depth) {
         String tabs = tabs(depth);  //tab level for field elements
-        String tabInfo = tabs + "\t";
-        //array and any othe reference will need to have its own "object" entry
-        String result = tabs + "{\n" + tabInfo;
+        String tabInfo = tabs + "\t" + "\t";
+        //array and any other reference will need to have its own "object" entry
+        String result = tabInfo;
         result += "\"name\": \"" + field.getName() + "\",\n";
-        result += tabInfo + "\"declaring class\": \"" + field.getDeclaringClass() + "\",\n";
+        result += tabInfo + "\"declaring class\": \"" + field.getDeclaringClass().getName() + "\",\n";
         //check if it is value or reference
         if(field.getType().isPrimitive()) { //primitive, use value
+            field.setAccessible(true);
+            try{
+                result += tabInfo + "\"value\": \"" + field.get(source).toString() + "\"\n";
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
 
         }
         else {  //reference

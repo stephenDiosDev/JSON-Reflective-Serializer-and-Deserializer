@@ -4,8 +4,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
+import java.util.*;
 import javax.json.*;
 
 public class Serializer {
@@ -18,37 +17,89 @@ public class Serializer {
     }
 
     private static String jsonObject(Object src, IdentityHashMap hashMap, ArrayList<String> jsonStrings) {
-        if(hashMap.containsValue(src.hashCode())) {
+        if(!hashMap.containsValue(src.hashCode())) {
             //json object and json stringwriter setup and start writing stuff in
+            JsonObject jsonObject;
+            JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+            jsonObjectBuilder.add("class", src.getClass().getName());
+
+
+            //add this object to the hashmap
+            int hashID = hashMap.size();
+            hashMap.put(hashID, src.hashCode());
+            jsonObjectBuilder.add("id", hashID);
+
+            //type check
+            if(!src.getClass().isArray()) { //object type
+                jsonObjectBuilder.add("type", "object");
+
+                Field[] fields = src.getClass().getDeclaredFields();
+
+                JsonArrayBuilder jsonFieldArray = Json.createArrayBuilder();
+                //jsonObjectBuilder.add("fields", jsonFieldArray);
+                for(Field field : fields) {
+                    try{
+                        field.setAccessible(true);
+                        if(field.getType().isPrimitive()) {
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                                    .add("name", field.getName())
+                                    .add("declaringclass", field.getDeclaringClass().getName())
+                                    .add("value", field.get(src).toString()));
+                        }
+                        else if(field.get(src) == null) {   //references a null
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                                    .add("name", field.getName())
+                                    .add("declaringclass", field.getDeclaringClass().getName())
+                                    .add("reference", "null"));
+                        }
+                        else {  //non null reference
+                            int parentHash = field.getDeclaringClass().hashCode();
+                            if(hashMap.containsValue(parentHash)) {
+                                //get ID
+                                int parentID = getKeyByValue(hashMap, parentHash);
+                                if(parentID != -1) {    //found it
+                                    jsonFieldArray.add(Json.createObjectBuilder()
+                                            .add("name", field.getName())
+                                            .add("declaringclass", field.getDeclaringClass().getName())
+                                            .add("reference", parentID));
+                                }
+                            }
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                jsonObjectBuilder.add("fields", jsonFieldArray.build());
+
+            }
+            else {  //array type
+
+            }
+
+            //build and write jsonObject to the stringWriter
+            jsonObject = jsonObjectBuilder.build();
+            StringWriter stringWriter = new StringWriter();
+            JsonWriter jsonWriter = Json.createWriter(stringWriter);
+            jsonWriter.writeObject(jsonObject);
+            return stringWriter.toString();
         }
         else {  //duplicate
             return "";
         }
     }
 
-    private static String jsonField(Object source, Field field, int depth) {
-        String tabs = tabs(depth);  //tab level for field elements
-        String tabInfo = tabs + "\t" + "\t";
-        //array and any other reference will need to have its own "object" entry
-        String result = tabInfo;
-        result += "\"name\": \"" + field.getName() + "\",\n";
-        result += tabInfo + "\"declaring class\": \"" + field.getDeclaringClass().getName() + "\",\n";
-        //check if it is value or reference
-        if(field.getType().isPrimitive()) { //primitive, use value
-            field.setAccessible(true);
-            try{
-                result += tabInfo + "\"value\": \"" + field.get(source).toString() + "\"\n";
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+    //find the hashID given some value
+    //since my map is 1 to 1, the first matching result is the only matching result
+    //code adapted from here: https://stackoverflow.com/a/2904266
+    private static int getKeyByValue(IdentityHashMap hashMap, int hashValue) {
+        Set<Map.Entry> entries = hashMap.entrySet();
+        for(Map.Entry entry : entries) {
+            if(Objects.equals(hashValue, (int)entry.getValue())) {
+                return (int)entry.getValue();
             }
-
         }
-        else {  //reference
-
-        }
-
-
-        return result;
+        return -1;
     }
 
 }

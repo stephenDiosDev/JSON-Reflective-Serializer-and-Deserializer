@@ -54,6 +54,8 @@ public class Serializer {
                         }
                         else {  //non null reference
                             int parentHash = field.getDeclaringClass().hashCode();
+                            //serialize the parent
+                            jsonStrings.add(serializeObject(field.getDeclaringClass(), hashMap, jsonStrings));
                             if(hashMap.containsValue(parentHash)) {
                                 //get ID
                                 int parentID = getKeyByValue(hashMap, parentHash);
@@ -74,8 +76,23 @@ public class Serializer {
 
             }
             else {  //array type
+                //serialize it as a reference and send the array part to serializeObject
+                //add the returning string to the jsonStrings list
 
-            }
+                //must figure out as well if the array contains an array of references
+                jsonObjectBuilder.add("type", "array");
+                jsonObjectBuilder.add("length", Array.getLength(src));
+                JsonArrayBuilder valueArray = Json.createArrayBuilder();
+
+                //this doesnt actually work! It will return Integer instead of int for example
+                if(Array.get(src, 0).getClass().isPrimitive()) {
+
+
+                }
+
+                for(int i = 0; i < Array.getLength(src); i++) {
+                    valueArray.add(Json.createObjectBuilder().add("value", Array.get(src, i).toString()));
+                }
 
             //build and write jsonObject to the stringWriter
             jsonObject = jsonObjectBuilder.build();

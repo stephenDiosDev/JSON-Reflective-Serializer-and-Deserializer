@@ -1,5 +1,7 @@
 package program;
 
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
@@ -34,6 +36,17 @@ public class Serializer {
     private static String jsonObject(Object src, int depth, IdentityHashMap hashMap) {
         String tabs = tabs(depth);
         String result = "\n" + tabs + "{\n";
+
+        JsonObject jsonObject;
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+        jsonObjectBuilder.add("class", src.getClass().getName());
+        jsonObjectBuilder.add("id", 0);
+
+        
+        StringWriter stringWriter = new StringWriter();
+        JsonWriter jsonWriter = Json.createWriter(stringWriter);
+
+        jsonWriter.writeObject(jsonObject.set);
 
         //do class, id, type, fields
         String tabInfo = tabs + "\t";

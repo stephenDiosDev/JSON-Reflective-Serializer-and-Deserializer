@@ -17,6 +17,24 @@ public class Serializer {
     }
 
     private static String jsonObject(Object src, IdentityHashMap hashMap, ArrayList<String> jsonStrings) {
+
+        /*
+        Objects: this is an array, one for each in the Sender.java loop
+            perhaps put a json creator there and have it add to the objects string array
+
+                Class: name, id, type (object vs array), last component
+                    last ocmponent is fields for object,
+                    length and entries for an array
+         */
+
+
+
+
+
+
+
+
+
         if(!hashMap.containsValue(src.hashCode())) {
             //json object and json stringwriter setup and start writing stuff in
             JsonObject jsonObject;
@@ -55,7 +73,12 @@ public class Serializer {
                         else {  //non null reference
                             int parentHash = field.getDeclaringClass().hashCode();
                             //serialize the parent
+
+                            /////////////////////////////////////////////////////////////////////////////////////
                             jsonStrings.add(serializeObject(field.getDeclaringClass(), hashMap, jsonStrings));
+                            /////////////////////////////////////////////////////////////////////////////////////
+
+
                             if(hashMap.containsValue(parentHash)) {
                                 //get ID
                                 int parentID = getKeyByValue(hashMap, parentHash);
@@ -85,14 +108,13 @@ public class Serializer {
                 JsonArrayBuilder valueArray = Json.createArrayBuilder();
 
                 //this doesnt actually work! It will return Integer instead of int for example
-                if(Array.get(src, 0).getClass().isPrimitive()) {
+                Class compType = src.getClass().getComponentType();
 
 
-                }
-
-                for(int i = 0; i < Array.getLength(src); i++) {
+                for (int i = 0; i < Array.getLength(src); i++) {
                     valueArray.add(Json.createObjectBuilder().add("value", Array.get(src, i).toString()));
                 }
+            }
 
             //build and write jsonObject to the stringWriter
             jsonObject = jsonObjectBuilder.build();

@@ -17,7 +17,7 @@ public class Serializer {
     }
 
     private static String jsonObject(Object src, IdentityHashMap hashMap, ArrayList<String> jsonStrings) {
-        if(!hashMap.containsValue(src.hashCode())) {
+        if (!hashMap.containsValue(src.hashCode())) {
             //json object and json stringwriter setup and start writing stuff in
             JsonObject jsonObject;
             JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
@@ -30,36 +30,34 @@ public class Serializer {
             jsonObjectBuilder.add("id", hashID);
 
             //type check
-            if(!src.getClass().isArray()) { //object type
+            if (!src.getClass().isArray()) { //object type
                 jsonObjectBuilder.add("type", "object");
 
                 Field[] fields = src.getClass().getDeclaredFields();
 
                 JsonArrayBuilder jsonFieldArray = Json.createArrayBuilder();
                 //jsonObjectBuilder.add("fields", jsonFieldArray);
-                for(Field field : fields) {
-                    try{
+                for (Field field : fields) {
+                    try {
                         field.setAccessible(true);
-                        if(field.getType().isPrimitive()) {
+                        if (field.getType().isPrimitive()) {
                             jsonFieldArray.add(Json.createObjectBuilder()
                                     .add("name", field.getName())
                                     .add("declaringclass", field.getDeclaringClass().getName())
                                     .add("value", field.get(src).toString()));
-                        }
-                        else if(field.get(src) == null) {   //references a null
+                        } else if (field.get(src) == null) {   //references a null
                             jsonFieldArray.add(Json.createObjectBuilder()
                                     .add("name", field.getName())
                                     .add("declaringclass", field.getDeclaringClass().getName())
                                     .add("reference", "null"));
-                        }
-                        else {  //non null reference
+                        } else {  //non null reference
                             int parentHash = field.getDeclaringClass().hashCode();
                             //serialize the parent
                             jsonStrings.add(serializeObject(field.getDeclaringClass(), hashMap, jsonStrings));
-                            if(hashMap.containsValue(parentHash)) {
+                            if (hashMap.containsValue(parentHash)) {
                                 //get ID
                                 int parentID = getKeyByValue(hashMap, parentHash);
-                                if(parentID != -1) {    //found it
+                                if (parentID != -1) {    //found it
                                     jsonFieldArray.add(Json.createObjectBuilder()
                                             .add("name", field.getName())
                                             .add("declaringclass", field.getDeclaringClass().getName())
@@ -74,8 +72,7 @@ public class Serializer {
                 }
                 jsonObjectBuilder.add("fields", jsonFieldArray.build());
 
-            }
-            else {  //array type
+            } else {  //array type
                 //serialize it as a reference and send the array part to serializeObject
                 //add the returning string to the jsonStrings list
 
@@ -85,25 +82,24 @@ public class Serializer {
                 JsonArrayBuilder valueArray = Json.createArrayBuilder();
 
                 //this doesnt actually work! It will return Integer instead of int for example
-                if(Array.get(src, 0).getClass().isPrimitive()) {
+                if (Array.get(src, 0).getClass().isPrimitive()) {
 
 
                 }
 
-                for(int i = 0; i < Array.getLength(src); i++) {
+                for (int i = 0; i < Array.getLength(src); i++) {
                     valueArray.add(Json.createObjectBuilder().add("value", Array.get(src, i).toString()));
                 }
 
-            //build and write jsonObject to the stringWriter
-            jsonObject = jsonObjectBuilder.build();
-            StringWriter stringWriter = new StringWriter();
-            JsonWriter jsonWriter = Json.createWriter(stringWriter);
-            jsonWriter.writeObject(jsonObject);
-            return stringWriter.toString();
+                //build and write jsonObject to the stringWriter
+                jsonObject = jsonObjectBuilder.build();
+                StringWriter stringWriter = new StringWriter();
+                JsonWriter jsonWriter = Json.createWriter(stringWriter);
+                jsonWriter.writeObject(jsonObject);
+                return stringWriter.toString();
+            }
         }
-        else {  //duplicate
-            return "";
-        }
+        return "";
     }
 
     //find the hashID given some value

@@ -77,43 +77,35 @@ public class Serializer {
 
             }
             else {  //array type
+                //name and id already added to json
+                jsonObjectBuilder.add("type", "array");
+                jsonObjectBuilder.add("length", Array.getLength(src));
+
+                JsonArrayBuilder jsonFieldArray = Json.createArrayBuilder();
+
                 if(src.getClass().getComponentType().isPrimitive()) {   //array of primitives
-                    //name and id already added to json
-                    jsonObjectBuilder.add("type", "array");
-                    jsonObjectBuilder.add("length", Array.getLength(src));
-
                     //make an array for the entries and their value
-                    JsonArrayBuilder jsonFieldArray = Json.createArrayBuilder();
-
                     for(int i = 0; i < Array.getLength(src); i++) {
                         jsonFieldArray.add(Json.createObjectBuilder()
                                 .add("value", Array.get(src, i).toString()));
                     }
-
                     jsonObjectBuilder.add("entries", jsonFieldArray.build());
-
                 }
                 else {  //array of objects, further serialization needed
-
+                    //still have to add entries
+                    for(int i = 0; i < Array.getLength(src); i++) {
+                        if(Array.get(src, i) != null) {
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                            .add("reference", hashMap.size()));
+                            jsonStrings.add(serializeObject(Array.get(src, i), hashMap, jsonStrings));
+                        }
+                        else {  //null reference, don't serialize
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                                    .add("reference", "null"));
+                        }
+                    }
+                    jsonObjectBuilder.add("entries", jsonFieldArray.build());
                 }
-                /*
-                If the array contains non primitive objects, we have to serialize each of those
-                    (we are trying to reduce the array to a primitive)
-                So we must check here if the array contains primitives or objects
-                 */
-
-
-                //must figure out as well if the array contains an array of references
-                jsonObjectBuilder.add("type", "array");
-                jsonObjectBuilder.add("length", Array.getLength(src));
-                JsonArrayBuilder valueArray = Json.createArrayBuilder();
-
-
-
-                for (int i = 0; i < Array.getLength(src); i++) {
-                    valueArray.add(Json.createObjectBuilder().add("value", Array.get(src, i).toString()));
-                }
-
             }
             //build and write jsonObject to the stringWriter
             jsonObject = jsonObjectBuilder.build();

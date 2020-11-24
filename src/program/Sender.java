@@ -1,5 +1,9 @@
 package program;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 
@@ -22,11 +26,17 @@ public class Sender {
 
         ArrayList<String> outputStrings = new ArrayList<>();
 
-        //figure out how this will translate into the hashmap thing
-        //maybe move hashmap out here and pass it in? Probably the best solution
+        JsonObject jsonObject;
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+        JsonArrayBuilder jsonFieldArray = Json.createArrayBuilder();
+
         for(Object ob : objects) {
+            //jsonFieldArray.add(Serializer.serializeObject(ob, hashMap, jsonStrings));
             jsonStrings.add(Serializer.serializeObject(ob, hashMap, jsonStrings));
         }
+
+        //jsonObjectBuilder.add("objects", jsonFieldArray.build());
+        //System.out.println(jsonObjectBuilder.build().toString());
 
         //remove any empty strings
         for(String s : jsonStrings) {
@@ -34,10 +44,15 @@ public class Sender {
                 outputStrings.add(s);
         }
 
-        for(String st : outputStrings)
-            System.out.println(st);
+        //add the actual filled json strings to the objects array
+        for(String st : outputStrings) {
+            jsonFieldArray.add(st);
+        }
+        jsonObjectBuilder.add("objects", jsonFieldArray.build());
+        jsonObject = jsonObjectBuilder.build();
+        //System.out.println(jsonObject.toString());    //debug, but not pretty to look at
 
-        //all output strings are now in outputString. We can send these out
+        //network code
     }
 
     public String toString() {

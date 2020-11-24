@@ -4,7 +4,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.IdentityHashMap;
+import java.util.*;
 import javax.json.*;
 
 public class Serializer {
@@ -12,116 +12,121 @@ public class Serializer {
     Create json object and store the object
      */
 
-    public static String serializeObject(Object source) {
-        IdentityHashMap hashMap = new IdentityHashMap();
-        int depth = 1;
+    public static String serializeObject(Object source, IdentityHashMap hashMap, ArrayList<String> jsonStrings) {
+        return jsonObject(source, hashMap, jsonStrings);
+    }
+
+    private static String jsonObject(Object src, IdentityHashMap hashMap, ArrayList<String> jsonStrings) {
         String result = "";
 
-        //turn this into a loop for all objects so it doesnt print the above multiple times
-        result += jsonObject(source, depth + 1, hashMap);
-
-        return result;
-    }
-
-    private static String tabs(int depth) {
-        String tabs = "";
-
-        for(int i = 0; i < depth; i++) {
-            tabs += "\t";
-        }
-
-        return tabs;
-    }
-
-    private static String jsonObject(Object src, int depth, IdentityHashMap hashMap) {
-        String tabs = tabs(depth);
-        String result = "\n" + tabs + "{\n";
-
-        JsonObject jsonObject;
-        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
-        jsonObjectBuilder.add("class", src.getClass().getName());
-        jsonObjectBuilder.add("id", 0);
-
-        
-        StringWriter stringWriter = new StringWriter();
-        JsonWriter jsonWriter = Json.createWriter(stringWriter);
-
-        jsonWriter.writeObject(jsonObject.set);
-
-        //do class, id, type, fields
-        String tabInfo = tabs + "\t";
-        result += tabInfo;  //setup new tab amount
-
-        //id check
-        if(!hashMap.containsValue(src.hashCode())) {
-            //class name
-            result += "\"class\": \"" + src.getClass().getName() + "\",\n";
-
-            result += tabInfo;
-
-            int id = hashMap.size();
-            hashMap.put(id, src.hashCode());
-            result += "\"id\": \"" + id + "\",\n";
+        if (!hashMap.containsValue(src.hashCode())) {
+            //json object and json stringwriter setup and start writing stuff in
+            JsonObject jsonObject;
+            JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+            jsonObjectBuilder.add("class", src.getClass().getName());
 
 
-            if(src.getClass().isArray()) {
-                String type = "array";
-            }
-            else {
-                String type = "object";
+            //add this object to the hashmap
+            int hashID = hashMap.size();
+            hashMap.put(hashID, src.hashCode());
+            jsonObjectBuilder.add("id", hashID);
 
-                result += tabInfo + "\"type\": \"" + type + "\",\n";
-                result += tabInfo + "\"fields\": [\n";
+            //type check
+            if (!src.getClass().isArray()) { //object type
+                jsonObjectBuilder.add("type", "object");
 
-                //fields call
                 Field[] fields = src.getClass().getDeclaredFields();
 
-                for(int i = 0; i < fields.length; i++) {
-                    result += tabInfo + "\t{\n";
-                    result += jsonField(src, fields[i], depth + 1);
-                    result += tabInfo + "\t}";
-                    if(i != fields.length - 1)  //last element dont put comma
-                        result += ",";
-                    result += "\n";
+                JsonArrayBuilder jsonFieldArray = Json.createArrayBuilder();
+                for (Field field : fields) {
+                    try {
+                        field.setAccessible(true);
+                        if (field.getType().isPrimitive()) {
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                                    .add("name", field.getName())
+                                    .add("declaringclass", field.getDeclaringClass().getName())
+                                    .add("value", field.get(src).toString()));
+                        }
+                        else if (field.get(src) == null) {   //references a null
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                                    .add("name", field.getName())
+                                    .add("declaringclass", field.getDeclaringClass().getName())
+                                    .add("reference", "null"));
+                        }
+                        else {  //non null reference
+                            //serialize the parent
+                            Object fieldInstance = field.get(src);
+                            /*
+                            figure out the runtime instance of the field object and send it through serializeObject
+                             */
+
+                            jsonStrings.add(serializeObject(fieldInstance, hashMap, jsonStrings));
+
+                            int parentID = (int) getKeyByValue(hashMap, fieldInstance.hashCode());
+
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                                    .add("name", field.getName())
+                                    .add("declaringclass", field.getDeclaringClass().getName())
+                                    .add("reference", parentID));
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+                jsonObjectBuilder.add("fields", jsonFieldArray.build());
+
+            }
+            else {  //array type
+                //name and id already added to json
+                jsonObjectBuilder.add("type", "array");
+                jsonObjectBuilder.add("length", Array.getLength(src));
+
+                JsonArrayBuilder jsonFieldArray = Json.createArrayBuilder();
+
+                if(src.getClass().getComponentType().isPrimitive()) {   //array of primitives
+                    //make an array for the entries and their value
+                    for(int i = 0; i < Array.getLength(src); i++) {
+                        jsonFieldArray.add(Json.createObjectBuilder()
+                                .add("value", Array.get(src, i).toString()));
+                    }
+                    jsonObjectBuilder.add("entries", jsonFieldArray.build());
+                }
+                else {  //array of objects, further serialization needed
+                    //still have to add entries
+                    for(int i = 0; i < Array.getLength(src); i++) {
+                        if(Array.get(src, i) != null) {
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                            .add("reference", hashMap.size()));
+                            jsonStrings.add(serializeObject(Array.get(src, i), hashMap, jsonStrings));
+                        }
+                        else {  //null reference, don't serialize
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                                    .add("reference", "null"));
+                        }
+                    }
+                    jsonObjectBuilder.add("entries", jsonFieldArray.build());
                 }
             }
-
-
-            result += tabInfo + "]\n";
-
-
-
-
+            //build and write jsonObject to the stringWriter
+            jsonObject = jsonObjectBuilder.build();
+            StringWriter stringWriter = new StringWriter();
+            JsonWriter jsonWriter = Json.createWriter(stringWriter);
+            jsonWriter.writeObject(jsonObject);
+            result = stringWriter.toString();
         }
 
-
-        result += tabs + "}\n";
         return result;
     }
 
-    private static String jsonField(Object source, Field field, int depth) {
-        String tabs = tabs(depth);  //tab level for field elements
-        String tabInfo = tabs + "\t" + "\t";
-        //array and any other reference will need to have its own "object" entry
-        String result = tabInfo;
-        result += "\"name\": \"" + field.getName() + "\",\n";
-        result += tabInfo + "\"declaring class\": \"" + field.getDeclaringClass().getName() + "\",\n";
-        //check if it is value or reference
-        if(field.getType().isPrimitive()) { //primitive, use value
-            field.setAccessible(true);
-            try{
-                result += tabInfo + "\"value\": \"" + field.get(source).toString() + "\"\n";
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
+    //find the hashID given some value
+    //since my map is 1 to 1, the first matching result is the only matching result
+    //code taken from here: https://stackoverflow.com/a/2904266
+    private static <T, E> T getKeyByValue(Map<T, E> hashMap, E hashValue) {
+        for(Map.Entry<T, E> entry : hashMap.entrySet()) {
+            if(Objects.equals(hashValue, entry.getValue()))
+                return entry.getKey();
         }
-        else {  //reference
-
-        }
-
-
-        return result;
+        return null;
     }
 
 }

@@ -1,6 +1,7 @@
 package program;
 
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 
 public class Sender {
     private Visualizer visualizer;
@@ -16,19 +17,27 @@ public class Sender {
 
     public void driver() {
         objects = visualizer.userSelectionMenu();
+        IdentityHashMap hashMap = new IdentityHashMap();
+        ArrayList<String> jsonStrings = new ArrayList<>();
+
+        ArrayList<String> outputStrings = new ArrayList<>();
 
         //figure out how this will translate into the hashmap thing
         //maybe move hashmap out here and pass it in? Probably the best solution
-        String result = "{\n\t\"objects\": [";
         for(Object ob : objects) {
-            result += Serializer.serializeObject(ob);
+            jsonStrings.add(Serializer.serializeObject(ob, hashMap, jsonStrings));
         }
 
-        //TODO: fix slight formatting issue with newlines and commas between separate objects in above loop
+        //remove any empty strings
+        for(String s : jsonStrings) {
+            if(!s.equals(""))
+                outputStrings.add(s);
+        }
 
-        result += "\t]\n}";
+        for(String st : outputStrings)
+            System.out.println(st);
 
-        System.out.println(result);
+        //all output strings are now in outputString. We can send these out
     }
 
     public String toString() {

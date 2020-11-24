@@ -34,8 +34,11 @@ public class Sender {
                 outputStrings.add(s);
         }
 
+        System.out.println("About to print:");
         for(String st : outputStrings)
             System.out.println(st);
+
+        System.out.println("Printed");
 
         //all output strings are now in outputString. We can send these out
     }

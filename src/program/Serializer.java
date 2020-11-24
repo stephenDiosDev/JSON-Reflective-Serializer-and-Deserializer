@@ -17,6 +17,8 @@ public class Serializer {
     }
 
     private static String jsonObject(Object src, IdentityHashMap hashMap, ArrayList<String> jsonStrings) {
+        String result = "";
+
         if (!hashMap.containsValue(src.hashCode())) {
             //json object and json stringwriter setup and start writing stuff in
             JsonObject jsonObject;
@@ -36,7 +38,6 @@ public class Serializer {
                 Field[] fields = src.getClass().getDeclaredFields();
 
                 JsonArrayBuilder jsonFieldArray = Json.createArrayBuilder();
-                //jsonObjectBuilder.add("fields", jsonFieldArray);
                 for (Field field : fields) {
                     try {
                         field.setAccessible(true);
@@ -45,15 +46,24 @@ public class Serializer {
                                     .add("name", field.getName())
                                     .add("declaringclass", field.getDeclaringClass().getName())
                                     .add("value", field.get(src).toString()));
-                        } else if (field.get(src) == null) {   //references a null
+                        }
+                        else {
                             jsonFieldArray.add(Json.createObjectBuilder()
                                     .add("name", field.getName())
                                     .add("declaringclass", field.getDeclaringClass().getName())
                                     .add("reference", "null"));
-                        } else {  //non null reference
+                        }
+     /*                   else if (field.get(src) == null) {   //references a null
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                                    .add("name", field.getName())
+                                    .add("declaringclass", field.getDeclaringClass().getName())
+                                    .add("reference", "null"));
+                        }
+                        else {  //non null reference
                             int parentHash = field.getDeclaringClass().hashCode();
                             //serialize the parent
                             jsonStrings.add(serializeObject(field.getDeclaringClass(), hashMap, jsonStrings));
+                            //we want to serialize the specific object
                             if (hashMap.containsValue(parentHash)) {
                                 //get ID
                                 int parentID = getKeyByValue(hashMap, parentHash);
@@ -65,6 +75,8 @@ public class Serializer {
                                 }
                             }
                         }
+                        */
+
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -72,7 +84,8 @@ public class Serializer {
                 }
                 jsonObjectBuilder.add("fields", jsonFieldArray.build());
 
-            } else {  //array type
+            }
+            else {  //array type
                 //serialize it as a reference and send the array part to serializeObject
                 //add the returning string to the jsonStrings list
 
@@ -91,15 +104,16 @@ public class Serializer {
                     valueArray.add(Json.createObjectBuilder().add("value", Array.get(src, i).toString()));
                 }
 
-                //build and write jsonObject to the stringWriter
-                jsonObject = jsonObjectBuilder.build();
-                StringWriter stringWriter = new StringWriter();
-                JsonWriter jsonWriter = Json.createWriter(stringWriter);
-                jsonWriter.writeObject(jsonObject);
-                return stringWriter.toString();
             }
+            //build and write jsonObject to the stringWriter
+            jsonObject = jsonObjectBuilder.build();
+            StringWriter stringWriter = new StringWriter();
+            JsonWriter jsonWriter = Json.createWriter(stringWriter);
+            jsonWriter.writeObject(jsonObject);
+            result = stringWriter.toString();
         }
-        return "";
+
+        return result;
     }
 
     //find the hashID given some value

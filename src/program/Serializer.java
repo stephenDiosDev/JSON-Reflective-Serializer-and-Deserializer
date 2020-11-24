@@ -47,13 +47,7 @@ public class Serializer {
                                     .add("declaringclass", field.getDeclaringClass().getName())
                                     .add("value", field.get(src).toString()));
                         }
-                        else {
-                            jsonFieldArray.add(Json.createObjectBuilder()
-                                    .add("name", field.getName())
-                                    .add("declaringclass", field.getDeclaringClass().getName())
-                                    .add("reference", "null"));
-                        }
-     /*                   else if (field.get(src) == null) {   //references a null
+                        else if (field.get(src) == null) {   //references a null
                             jsonFieldArray.add(Json.createObjectBuilder()
                                     .add("name", field.getName())
                                     .add("declaringclass", field.getDeclaringClass().getName())
@@ -62,25 +56,23 @@ public class Serializer {
                         else {  //non null reference
                             int parentHash = field.getDeclaringClass().hashCode();
                             //serialize the parent
-                            jsonStrings.add(serializeObject(field.getDeclaringClass(), hashMap, jsonStrings));
-                            //we want to serialize the specific object
-                            if (hashMap.containsValue(parentHash)) {
-                                //get ID
-                                int parentID = getKeyByValue(hashMap, parentHash);
-                                if (parentID != -1) {    //found it
-                                    jsonFieldArray.add(Json.createObjectBuilder()
-                                            .add("name", field.getName())
-                                            .add("declaringclass", field.getDeclaringClass().getName())
-                                            .add("reference", parentID));
-                                }
-                            }
-                        }
-                        */
 
+                            /*
+                            figure out the runtime instance of the field object and send it through serializeObject
+                             */
+
+                            jsonStrings.add(serializeObject(field, hashMap, jsonStrings));
+
+                            int parentID = (int) getKeyByValue(hashMap, field.hashCode());
+
+                            jsonFieldArray.add(Json.createObjectBuilder()
+                                    .add("name", field.getName())
+                                    .add("declaringclass", field.getDeclaringClass().getName())
+                                    .add("reference", parentID));
+                        }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
-
                 }
                 jsonObjectBuilder.add("fields", jsonFieldArray.build());
 
@@ -118,15 +110,13 @@ public class Serializer {
 
     //find the hashID given some value
     //since my map is 1 to 1, the first matching result is the only matching result
-    //code adapted from here: https://stackoverflow.com/a/2904266
-    private static int getKeyByValue(IdentityHashMap hashMap, int hashValue) {
-        Set<Map.Entry> entries = hashMap.entrySet();
-        for(Map.Entry entry : entries) {
-            if(Objects.equals(hashValue, (int)entry.getValue())) {
-                return (int)entry.getValue();
-            }
+    //code taken from here: https://stackoverflow.com/a/2904266
+    private static <T, E> T getKeyByValue(Map<T, E> hashMap, E hashValue) {
+        for(Map.Entry<T, E> entry : hashMap.entrySet()) {
+            if(Objects.equals(hashValue, entry.getValue()))
+                return entry.getKey();
         }
-        return -1;
+        return null;
     }
 
 }

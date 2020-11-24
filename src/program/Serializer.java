@@ -54,16 +54,15 @@ public class Serializer {
                                     .add("reference", "null"));
                         }
                         else {  //non null reference
-                            int parentHash = field.getDeclaringClass().hashCode();
                             //serialize the parent
-
+                            Object fieldInstance = field.get(src);
                             /*
                             figure out the runtime instance of the field object and send it through serializeObject
                              */
 
-                            jsonStrings.add(serializeObject(field, hashMap, jsonStrings));
+                            jsonStrings.add(serializeObject(fieldInstance, hashMap, jsonStrings));
 
-                            int parentID = (int) getKeyByValue(hashMap, field.hashCode());
+                            int parentID = (int) getKeyByValue(hashMap, fieldInstance.hashCode());
 
                             jsonFieldArray.add(Json.createObjectBuilder()
                                     .add("name", field.getName())

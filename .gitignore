@@ -27,3 +27,4 @@ out/
 .idea/
 tests/TestStuff.java
 *.class
+out/production/cpsc-501-assignment-3/program/Serializer.class

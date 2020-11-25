@@ -6,7 +6,7 @@ import java.io.StringReader;
 import java.net.Socket;
 
 public class Receiver extends Thread{
-    private Deserializer deserializer;
+    private String serverInput;
 
     private JsonObject jsonObject;
 
@@ -20,15 +20,19 @@ public class Receiver extends Thread{
         try {
             Socket socket = new Socket("localhost", port);
             DataInputStream input = new DataInputStream(socket.getInputStream());
+            System.out.println("Client connected on separate thread! Waiting for data...");
 
             //put code to receive object here from server
-            String stringInput = input.readUTF();       //should be fully json ready
+            serverInput = input.readUTF();       //should be fully json ready
 
-            JsonReader jsonReader = Json.createReader(new StringReader(stringInput));
+
+            JsonReader jsonReader = Json.createReader(new StringReader(serverInput));
             JsonObject jsonObject = jsonReader.readObject();
+            System.out.println("JSON Object received! Closing connection...");
             jsonReader.close();
             //debug
-            System.out.println(jsonObject.toString().replace("\\", ""));
+            //System.out.println(jsonObject.toString().replace("\\", ""));
+            System.out.println(serverInput.replace("\\", ""));
 
             input.close();
             socket.close();
@@ -36,6 +40,9 @@ public class Receiver extends Thread{
             System.out.println("Unable to create client socket");
             e.printStackTrace();
         }
+
+        //finished receiving the json string
+        Deserializer.deserializeObject(serverInput);
 
     }
 }

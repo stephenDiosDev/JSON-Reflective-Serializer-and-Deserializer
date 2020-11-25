@@ -72,8 +72,10 @@ public class Sender {
         int port = 7777;
         try {
             ServerSocket serverSocket = new ServerSocket(port);
+            System.out.println("Server socket open, awaiting connections");
             Socket socket = serverSocket.accept();
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+
 
             //writes output but also removes the escape slashes that occur during toString()
             //output.writeUTF(jsonObject.toString().replace("\\", ""));
@@ -81,6 +83,7 @@ public class Sender {
 
             output.close();
             serverSocket.close();
+            System.out.println("Server connection closing...");
         } catch (IOException e) {
             System.out.println("Unable to create new ServerSocket");
             e.printStackTrace();

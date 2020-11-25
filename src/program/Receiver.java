@@ -32,7 +32,7 @@ public class Receiver extends Thread{
             jsonReader.close();
             //debug
             //System.out.println(jsonObject.toString().replace("\\", ""));
-            System.out.println(serverInput.replace("\\", ""));
+            //System.out.println(serverInput.replace("\\", ""));
 
             input.close();
             socket.close();

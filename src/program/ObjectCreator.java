@@ -31,6 +31,13 @@ class AllPrimitive {
         setC(k);
     }
 
+    //copy constructor
+    AllPrimitive(AllPrimitive object) {
+        setA(object.getA());
+        setB(object.getB());
+        setC(object.isC());
+    }
+
     public int getA() {
         return a;
     }
@@ -81,6 +88,7 @@ class ComplexWithReferences {
         this.setObj2(obj2);
         this.setArr1(arr1);
     }
+
 
     public AllPrimitive getObj1() {
         return obj1;

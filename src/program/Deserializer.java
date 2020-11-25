@@ -8,6 +8,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 
 public class Deserializer {
+    private static Object[] createdObjects;
     /**
      * takes json string object and creates the object instances and returns it
      * @param source The json string object
@@ -29,7 +30,7 @@ public class Deserializer {
 
         //the object ID is the index in this array for that object
         //Ex: object with ID = 0 is at index 0
-        Object[] createdObjects = new Object[objectArray.size()];
+        createdObjects = new Object[objectArray.size()];
 
         for(int i = 0; i < objectArray.size(); i++) {
             jsonReader = Json.createReader(new StringReader(objectArray.getString(i)));
@@ -37,16 +38,82 @@ public class Deserializer {
             System.out.println(jsonObject.toString().replace("\\", ""));
 
             int id = jsonObject.getInt("id");
-            System.out.println("Object ID: " + id);
+            //System.out.println("Object ID: " + id);
+
+            createdObjects[id] = deserializeJsonClass(jsonObject);
 
         }
+
+        //debug
+        System.out.println(getArrayListPrintOut());
 
         return objects;
     }
 
-    private static Object deserializeJson(JsonObject jsonObject) {
+    public static String getArrayListPrintOut() {
+        String result = "";
 
-        return new Object();
+        for(int j = 0; j < createdObjects.length; j++) {
+            result += "\nIndex [" + j + "]: " + createdObjects[j].toString();
+        }
+
+        return result;
     }
 
+    /**
+     * Does the actual deserialization and reflection process
+     * @param jsonObject The input jsonObject to be deserialized
+     * @return The instanced object described by the jsonObject
+     */
+    private static Object deserializeJsonClass(JsonObject jsonObject) {
+        /*
+        String className
+        int id
+        String type (object or array only)
+        fields
+         */
+        Object result = null;
+        String className = jsonObject.getString("class");
+        className = className.replace("program.", "");
+
+        //System.out.println(jsonObject.toString().replace("\\", ""));
+
+        if(className.matches("AllPrimitive")) {
+            JsonArray fields = jsonObject.getJsonArray("fields");
+            result = new AllPrimitive(deserializeJsonAllPrimitive(fields));
+        }
+        else if(className.matches("ArrayPrimitives")) {
+
+        }
+        else if(className.matches("ArrayReferences")) {
+
+        }
+        else if(className.matches("ComplexWithReference")) {
+
+        }
+        else if(className.matches("InstanceJavaCollection")) {
+
+        }
+
+
+        return result;
+    }
+
+    //breaks down the AllPrimitive jsonString
+    private static AllPrimitive deserializeJsonAllPrimitive (JsonArray jsonFields) {
+
+        AllPrimitive result = null;
+
+        int a;
+        double b;
+        boolean c;
+
+        a = Integer.parseInt(jsonFields.getJsonObject(0).getString("value"));
+        b = Double.parseDouble(jsonFields.getJsonObject(1).getString("value"));
+        c = Boolean.parseBoolean(jsonFields.getJsonObject(2).getString("value"));
+
+        result = new AllPrimitive(a,b,c);
+
+        return result;
+    }
 }

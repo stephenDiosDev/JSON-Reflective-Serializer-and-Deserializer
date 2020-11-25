@@ -94,4 +94,8 @@ public class Sender {
     public String toString() {
         return visualizer.toString();
     }
+
+    public JsonObject getJsonObject() {
+        return jsonObject;
+    }
 }

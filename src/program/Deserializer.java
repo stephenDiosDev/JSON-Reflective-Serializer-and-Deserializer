@@ -26,29 +26,68 @@ public class Deserializer {
         JsonArray objectArray = jsonObject.getJsonArray("objects");
 
         //debug prints
-        //System.out.println(objectArray.toString().replace("\\", ""));
-        //System.out.println("Size of object array: " + objectArray.size());
+        System.out.println(objectArray.toString().replace("\\", ""));
+        System.out.println("Size of object array: " + objectArray.size());
 
         //the object ID is the index in this array for that object
         //Ex: object with ID = 0 is at index 0
         createdObjects = new Object[objectArray.size()];
 
+        //send each individual json object for deserialization
         for(int i = 0; i < objectArray.size(); i++) {
             jsonReader = Json.createReader(new StringReader(objectArray.getString(i)));
             jsonObject = jsonReader.readObject();
-            System.out.println(jsonObject.toString().replace("\\", ""));
+            //System.out.println(jsonObject.toString().replace("\\", ""));
 
             int id = jsonObject.getInt("id");
             //System.out.println("Object ID: " + id);
 
             createdObjects[id] = deserializeJsonClass(jsonObject);
-
         }
+
+        //debug
+        //for(Object obj : createdObjects)
+            //System.out.println(obj.toString());
 
         //debug
         System.out.println(getArrayListPrintOut());
 
         return objects;
+    }
+
+    /**
+     * Connects all the reference objects by reference ID to the ID object it belongs to
+     */
+    private static void connectReferences(JsonArray jsonArray) {
+        ArrayList<ArrayList<Integer>> references = new ArrayList<>();     //[ID][references for that ID]
+        JsonReader jsonReader;
+        JsonObject jsonObject;
+        for(int i = 0; i < createdObjects.length; i++) {
+            int ID = i; //the ID of the
+            references.add(new ArrayList<Integer>());
+
+            for(int j = 0; j < jsonArray.size(); j++) {
+                //grabs the {"class":...} string
+                jsonReader = Json.createReader(new StringReader(jsonArray.getString(i)));
+                jsonObject = jsonReader.readObject();
+
+                //find the ID in the jsonArray so we can read any references
+                if(ID == jsonObject.getInt("id")) {
+                    //now we must figure out if this is an object or array
+                    if(jsonObject.getString("type").equals("object")) { //have fields
+
+                    }
+                    else if(jsonObject.getString("type").equals("array")) { //have entries
+
+                    }
+
+                }
+                //once ID is found, it will either have a reference block or it wont IN THE FIELDS
+                    //if the field has a value; skip. If the field has a null reference; set -2 in the references
+                    //if the field has a non null reference; do references.get(i).add(reference number)
+            }
+
+        }
     }
 
     public static String getArrayListPrintOut() {

@@ -63,7 +63,7 @@ class AllPrimitive {
     }
 
     public String toString() {
-        String result = "\n[a: " + Integer.toString(getA()) + "] [b: " + Double.toString(getB()) + "] [c: " + Boolean.toString(isC()) + "]";
+        String result = "[a: " + Integer.toString(getA()) + "] [b: " + Double.toString(getB()) + "] [c: " + Boolean.toString(isC()) + "]";
         return result;
     }
 }
@@ -89,6 +89,11 @@ class ComplexWithReferences {
         this.setArr1(arr1);
     }
 
+    public ComplexWithReferences(ComplexWithReferences object) {
+        this.setObj1(object.getObj1());
+        this.setObj2(object.getObj2());
+        this.setArr1(object.getArr1());
+    }
 
     public AllPrimitive getObj1() {
         return obj1;

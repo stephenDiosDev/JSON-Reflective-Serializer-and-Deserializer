@@ -32,7 +32,7 @@ public class DeserializeTest {
         JsonObject jsonObject = sender.getJsonObject();
         deserializer.deserializeObject(jsonObject.toString());
 
-        assertEquals("\nIndex [0]: \n[a: 22] [b: 69.9] [c: true]", Deserializer.getArrayListPrintOut());
+        assertEquals("\nIndex [0]: [a: 22] [b: 69.9] [c: true]", Deserializer.getArrayListPrintOut());
     }
 
     @Test
@@ -47,10 +47,10 @@ public class DeserializeTest {
         JsonObject jsonObject = sender.getJsonObject();
         deserializer.deserializeObject(jsonObject.toString());
 
-        assertEquals("\nIndex [0]: \n[a: 22] [b: 69.9] [c: true]" +
-                "\nIndex [1]: \n[a: 13] [b: 102.76] [c: false]" +
-                "\nIndex [2]: \n[a: -2076] [b: -2.76] [c: false]" +
-                "\nIndex [3]: \n[a: 0] [b: 0.0] [c: true]", Deserializer.getArrayListPrintOut());
+        assertEquals("\nIndex [0]: [a: 22] [b: 69.9] [c: true]" +
+                "\nIndex [1]: [a: 13] [b: 102.76] [c: false]" +
+                "\nIndex [2]: [a: -2076] [b: -2.76] [c: false]" +
+                "\nIndex [3]: [a: 0] [b: 0.0] [c: true]", Deserializer.getArrayListPrintOut());
     }
 
     @Test
@@ -84,5 +84,49 @@ public class DeserializeTest {
                 "\nIndex [3]: [12]" +
                 "\nIndex [4]: No elements" +
                 "\nIndex [5]: [99, 95, 54]", Deserializer.getArrayListPrintOut());
+    }
+
+    @Test
+    public void testSingleAComplexWithReferences() {
+        String data = "create object2\n" + "12\n" + "22.2\n" + "true\n" + "69\n" + "102.54\n" + "false\n" +
+                "23\n" + "24\n" + "87\n" + "10000\n" + "end\n" + "send\n";
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+        sender.driver();
+
+        JsonObject jsonObject = sender.getJsonObject();
+        deserializer.deserializeObject(jsonObject.toString());
+
+        assertEquals("\nIndex [0]: null" +
+                "\nIndex [1]: [a: 12] [b: 22.2] [c: true]" +
+                "\nIndex [2]: [a: 69] [b: 102.54] [c: false]" +
+                "\nIndex [3]: No elements" +
+                "\nIndex [4]: [23, 24, 87, 10000]", Deserializer.getArrayListPrintOut());
+    }
+
+    @Test
+    public void testMultipleAComplexWithReferences() {
+        String data1 = "create object2\n" + "1\n" + "2.2\n" + "true\n" + "100\n" + "202.22\n" + "true\n" +
+                "99\n" + "100001\n" + "101\n" + "end\n";
+        String data2 = "create object2\n" + "-11\n" + "-4.2\n" + "false\n" + "-60\n" + "-902.22\n" + "true\n" +
+                "1010\n" + "end\n" + "send\n";
+
+        String data = data1 + data2;
+
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+        sender.driver();
+
+        JsonObject jsonObject = sender.getJsonObject();
+        deserializer.deserializeObject(jsonObject.toString());
+
+        assertEquals("\nIndex [0]: null" +
+                "\nIndex [1]: [a: 1] [b: 2.2] [c: true]" +
+                "\nIndex [2]: [a: 100] [b: 202.22] [c: true]" +
+                "\nIndex [3]: No elements" +
+                "\nIndex [4]: [99, 100001, 101]" +
+                "\nIndex [5]: null" +
+                "\nIndex [6]: [a: -11] [b: -4.2] [c: false]" +
+                "\nIndex [7]: [a: -60] [b: -902.22] [c: true]" +
+                "\nIndex [8]: No elements" +
+                "\nIndex [9]: [1010]", Deserializer.getArrayListPrintOut());
     }
 }

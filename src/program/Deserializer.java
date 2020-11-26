@@ -55,7 +55,7 @@ public class Deserializer {
         String result = "";
 
         for(int j = 0; j < createdObjects.length; j++) {
-            if(createdObjects[j].getClass().isArray())
+            if(createdObjects[j] == null || createdObjects[j].getClass().isArray())
                 result += "\nIndex [" + j + "]: " + Arrays.toString((int[]) createdObjects[j]);
             else
                 result += "\nIndex [" + j + "]: " + createdObjects[j].toString();
@@ -83,19 +83,20 @@ public class Deserializer {
 
         //System.out.println(jsonObject.toString().replace("\\", ""));
 
-        if(className.matches("AllPrimitive")) {
+        if(className.matches("AllPrimitive")) { //object 1
             JsonArray fields = jsonObject.getJsonArray("fields");
             result = new AllPrimitive(deserializeJsonAllPrimitive(fields));
         }
-        else if(className.matches("ArrayPrimitives")) {
+        else if(className.matches("ArrayPrimitives")) { //object 3
             JsonArray fields = jsonObject.getJsonArray("fields");
             result = new ArrayPrimitives(deserializeJsonArrayPrimitives(fields));
         }
         else if(className.matches("ArrayReferences")) {
 
         }
-        else if(className.matches("ComplexWithReference")) {
-
+        else if(className.matches("ComplexWithReference")) {    //object 2
+            JsonArray fields = jsonObject.getJsonArray("fields");
+            result = new ComplexWithReferences(deserializeJsonComplexWithReferences(fields));
         }
         else if(className.matches("InstanceJavaCollection")) {
 
@@ -143,6 +144,19 @@ public class Deserializer {
             result[i] = Integer.parseInt(array.getJsonObject(i).getString("value"));
         }
 
+
+        return result;
+    }
+
+    private static ComplexWithReferences deserializeJsonComplexWithReferences (JsonArray jsonFields) {
+        ComplexWithReferences result = null;
+
+        AllPrimitive obj1 = new AllPrimitive(null);
+        AllPrimitive obj2 = new AllPrimitive(null);
+
+        ArrayPrimitives arr1 = new ArrayPrimitives((int[]) null);
+
+        result = new ComplexWithReferences(obj1, obj2, arr1);
 
         return result;
     }

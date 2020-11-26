@@ -52,6 +52,8 @@ public class Deserializer {
         //debug
         System.out.println(getArrayListPrintOut());
 
+        connectReferences(objectArray);
+
         return objects;
     }
 
@@ -63,7 +65,7 @@ public class Deserializer {
         JsonReader jsonReader;
         JsonObject jsonObject;
         for(int i = 0; i < createdObjects.length; i++) {
-            int ID = i; //the ID of the
+            int ID = i;
             references.add(new ArrayList<Integer>());
 
             for(int j = 0; j < jsonArray.size(); j++) {
@@ -75,19 +77,49 @@ public class Deserializer {
                 if(ID == jsonObject.getInt("id")) {
                     //now we must figure out if this is an object or array
                     if(jsonObject.getString("type").equals("object")) { //have fields
-
+                        JsonArray fields = jsonObject.getJsonArray("fields");
+                        //go through all fields and find any references
+                        for(int k = 0; k < fields.size(); k++) {
+                            if(fields.getJsonObject(k).containsKey("reference")) {
+                                int fieldID = fields.getJsonObject(k).getInt("reference");
+                                if (!checkForDuplicates(references.get(ID), fieldID))   //bug in this, redo TODO
+                                    references.get(ID).add(fields.getJsonObject(k).getInt("reference"));
+                            }
+                        }
                     }
                     else if(jsonObject.getString("type").equals("array")) { //have entries
 
                     }
 
+
                 }
-                //once ID is found, it will either have a reference block or it wont IN THE FIELDS
+                //once ID is found, it will either have a reference block or it wont IN THE FIELDS/ENTRIES
                     //if the field has a value; skip. If the field has a null reference; set -2 in the references
                     //if the field has a non null reference; do references.get(i).add(reference number)
             }
-
+            for(int g = 0; g < references.get(ID).size(); g++)
+                System.out.println("[ID: " + ID + "] has [Reference: " + references.get(ID).get(g) + "]");
         }
+
+    }
+
+    /**
+     * Checks the nums list for duplicate of target
+     * @param nums
+     * @param target
+     * @return
+     */
+    public static boolean checkForDuplicates(ArrayList<Integer> nums, int target) {
+        int occurances = 0;
+        for(Integer i : nums) {
+            if (i == target)
+                occurances++;
+        }
+
+        if(occurances < 2)
+            return false;
+        else
+            return true;
     }
 
     public static String getArrayListPrintOut() {

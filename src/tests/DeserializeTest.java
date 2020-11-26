@@ -129,4 +129,93 @@ public class DeserializeTest {
                 "\nIndex [8]: No elements" +
                 "\nIndex [9]: [1010]", Deserializer.getArrayListPrintOut());
     }
+
+    @Test
+    public void testSingleArrayReferences() {
+        String data = "create object4\n" + "create object1\n" + "1\n" + "-2.02\n" + "false\n" +
+                "create object1\n" + "-65\n" + "300.1\n" + "false\n" +
+                "create object3\n" + "1\n" + "2\n" + "3\n" + "end\n" +
+                "create object2\n" + "12\n" + "22.2\n" + "true\n" + "69\n" + "102.54\n" + "false\n" +
+                "23\n" + "24\n" + "87\n" + "10000\n" + "end\n" + "finish\n" + "send\n";
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+        sender.driver();
+
+        JsonObject jsonObject = sender.getJsonObject();
+        deserializer.deserializeObject(jsonObject.toString());
+
+        assertEquals("\nIndex [0]: All elements null" +
+                "\nIndex [1]: null" +
+                "\nIndex [2]: [a: 1] [b: -2.02] [c: false]" +
+                "\nIndex [3]: [a: -65] [b: 300.1] [c: false]" +
+                "\nIndex [4]: No elements" +
+                "\nIndex [5]: [1, 2, 3]" +
+                "\nIndex [6]: null" +
+                "\nIndex [7]: [a: 12] [b: 22.2] [c: true]" +
+                "\nIndex [8]: [a: 69] [b: 102.54] [c: false]" +
+                "\nIndex [9]: No elements" +
+                "\nIndex [10]: [23, 24, 87, 10000]", Deserializer.getArrayListPrintOut());
+    }
+
+    @Test
+    public void testMultipleArrayReferences() {
+        String data1 = "create object4\n" + "create object1\n" + "1\n" + "-2.02\n" + "false\n" +
+                "create object1\n" + "-65\n" + "300.1\n" + "false\n" +
+                "create object3\n" + "1\n" + "2\n" + "3\n" + "end\n" +
+                "create object2\n" + "12\n" + "22.2\n" + "true\n" + "69\n" + "102.54\n" + "false\n" +
+                "23\n" + "24\n" + "87\n" + "10000\n" + "end\n" + "finish\n";
+
+        String data2 = "create object4\n" + "create object1\n" + "1\n" + "-2.02\n" + "false\n" +
+                "create object4\n" + "create object1\n" + "-65\n" + "300.1\n" + "false\n" + "finish\n" +
+                "create object3\n" + "1\n" + "2\n" + "3\n" + "end\n" + "finish\n" + "send\n";
+
+        String data = data1 + data2;
+
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+        sender.driver();
+
+        JsonObject jsonObject = sender.getJsonObject();
+        deserializer.deserializeObject(jsonObject.toString());
+
+        assertEquals("\nIndex [0]: All elements null" +
+                "\nIndex [1]: null" +
+                "\nIndex [2]: [a: 1] [b: -2.02] [c: false]" +
+                "\nIndex [3]: [a: -65] [b: 300.1] [c: false]" +
+                "\nIndex [4]: No elements" +
+                "\nIndex [5]: [1, 2, 3]" +
+                "\nIndex [6]: null" +
+                "\nIndex [7]: [a: 12] [b: 22.2] [c: true]" +
+                "\nIndex [8]: [a: 69] [b: 102.54] [c: false]" +
+                "\nIndex [9]: No elements" +
+                "\nIndex [10]: [23, 24, 87, 10000]" +
+                "\nIndex [11]: All elements null" +
+                "\nIndex [12]: null" +
+                "\nIndex [13]: [a: 1] [b: -2.02] [c: false]" +
+                "\nIndex [14]: All elements null" +
+                "\nIndex [15]: null" +
+                "\nIndex [16]: [a: -65] [b: 300.1] [c: false]" +
+                "\nIndex [17]: No elements" +
+                "\nIndex [18]: [1, 2, 3]", Deserializer.getArrayListPrintOut());
+    }
+
+    @Test
+    public void testNestedArrayReferences() {
+        String data = "create object4\n" + "create object1\n" + "1\n" + "-2.02\n" + "false\n" +
+                "create object4\n" + "create object1\n" + "-65\n" + "300.1\n" + "false\n" + "finish\n" +
+                "create object3\n" + "1\n" + "2\n" + "3\n" + "end\n" + "finish\n" + "send\n";
+
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+        sender.driver();
+
+        JsonObject jsonObject = sender.getJsonObject();
+        deserializer.deserializeObject(jsonObject.toString());
+
+        assertEquals("\nIndex [0]: All elements null" +
+                "\nIndex [1]: null" +
+                "\nIndex [2]: [a: 1] [b: -2.02] [c: false]" +
+                "\nIndex [3]: All elements null" +
+                "\nIndex [4]: null" +
+                "\nIndex [5]: [a: -65] [b: 300.1] [c: false]" +
+                "\nIndex [6]: No elements" +
+                "\nIndex [7]: [1, 2, 3]", Deserializer.getArrayListPrintOut());
+    }
 }

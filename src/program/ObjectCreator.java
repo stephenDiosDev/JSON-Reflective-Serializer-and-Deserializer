@@ -10,6 +10,8 @@ package program;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * A class with only primitives as its instance variables
@@ -180,6 +182,10 @@ class ArrayReferences {
         setMyArr(inputArr);
     }
 
+    public ArrayReferences(ArrayReferences object) {
+        this.setMyArr(object.getMyArr());
+    }
+
     public Object[] getMyArr() {
         return myArr;
     }
@@ -189,7 +195,16 @@ class ArrayReferences {
     }
 
     public String toString() {
-        String result = "\n";
+        String result = "";
+
+        /*
+        The following if statement that checks if an array contains all null values
+        was taken from the following link under "Check Array Null Using Java 8"
+        https://www.delftstack.com/howto/java/how-to-check-whether-an-array-is-null-empty/#check-array-null-using-java-8
+         */
+        //checks if the entire array is null values
+        if(Arrays.stream(getMyArr()).allMatch(Objects::isNull))
+            return "All elements null";
 
         for(int i = 0; i < myArr.length; i++) {
             if(myArr[i] instanceof AllPrimitive) {

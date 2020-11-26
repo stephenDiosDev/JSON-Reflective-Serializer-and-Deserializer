@@ -82,23 +82,23 @@ public class Deserializer {
 
 
         //System.out.println(jsonObject.toString().replace("\\", ""));
+        JsonArray fields = null;
+        if(!className.equals("[I"))
+            fields = jsonObject.getJsonArray("fields");
 
         if(className.matches("AllPrimitive")) { //object 1
-            JsonArray fields = jsonObject.getJsonArray("fields");
             result = new AllPrimitive(deserializeJsonAllPrimitive(fields));
         }
         else if(className.matches("ArrayPrimitives")) { //object 3
-            JsonArray fields = jsonObject.getJsonArray("fields");
             result = new ArrayPrimitives(deserializeJsonArrayPrimitives(fields));
         }
-        else if(className.matches("ArrayReferences")) {
-
+        else if(className.matches("ArrayReferences")) { //object 4
+            result = new ArrayReferences(deserializeJsonArrayReferences(fields));
         }
         else if(className.matches("ComplexWithReference")) {    //object 2
-            JsonArray fields = jsonObject.getJsonArray("fields");
             result = new ComplexWithReferences(deserializeJsonComplexWithReferences(fields));
         }
-        else if(className.matches("InstanceJavaCollection")) {
+        else if(className.matches("InstanceJavaCollection")) {  //object 5
 
         }
         else if(className.equals("[I")) {   //int array
@@ -158,6 +158,18 @@ public class Deserializer {
 
         result = new ComplexWithReferences(obj1, obj2, arr1);
 
+        return result;
+    }
+
+    private static ArrayReferences deserializeJsonArrayReferences (JsonArray jsonFields) {
+        ArrayReferences result = null;
+
+        Object[] objArr = new Object[jsonFields.size()];
+
+        for(Object obj : objArr)
+            obj = null;
+
+        result = new ArrayReferences(objArr);
         return result;
     }
 }

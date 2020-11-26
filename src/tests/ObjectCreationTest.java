@@ -119,7 +119,7 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[a: 1] [b: -2.02] [c: false]\n" +
+        assertEquals("[a: 1] [b: -2.02] [c: false]\n" +
                             "[a: -65] [b: 300.1] [c: false]\n\n" +
                             "[Index: 0]: 1\n" + "[Index: 1]: 2\n" + "[Index: 2]: 3\n\n" +
                             "[a: 12] [b: 22.2] [c: true]\n" +
@@ -139,8 +139,8 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[a: 1] [b: -2.02] [c: false]\n" +
-                            "\n[a: -65] [b: 300.1] [c: false]\n\n" +
+        assertEquals("[a: 1] [b: -2.02] [c: false]\n" +
+                            "[a: -65] [b: 300.1] [c: false]\n\n" +
                             "\n[Index: 0]: 1" + "\n[Index: 1]: 2" + "\n[Index: 2]: 3\n\n\n", send.toString());
     }
 
@@ -163,14 +163,14 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[a: 1] [b: -2.02] [c: false]\n" +
+        assertEquals("[a: 1] [b: -2.02] [c: false]\n" +
                 "[a: -65] [b: 300.1] [c: false]\n\n" +
                 "[Index: 0]: 1\n" + "[Index: 1]: 2\n" + "[Index: 2]: 3\n\n" +
                 "[a: 12] [b: 22.2] [c: true]\n" +
                 "[a: 69] [b: 102.54] [c: false]\n" +
                 "\n[Index: 0]: 23\n" + "[Index: 1]: 24\n" + "[Index: 2]: 87\n" + "[Index: 3]: 10000\n\n\n" +
-                "\n[a: 1] [b: -2.02] [c: false]\n" +
-                "\n[a: -65] [b: 300.1] [c: false]\n\n" +
+                "[a: 1] [b: -2.02] [c: false]\n" +
+                "[a: -65] [b: 300.1] [c: false]\n\n" +
                 "\n[Index: 0]: 1" + "\n[Index: 1]: 2" + "\n[Index: 2]: 3\n\n\n", send.toString());
     }
 

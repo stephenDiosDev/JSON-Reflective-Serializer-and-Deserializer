@@ -265,6 +265,14 @@ class InstanceJavaCollection {
         list.add(arr);
     }
 
+    public InstanceJavaCollection (InstanceJavaCollection object) {
+        setA(object.getA());
+        setB(object.getB());
+        setC(object.getC());
+        setArr(object.getArr());
+        setList(object.getList());
+    }
+
     public AllPrimitive getA() {
         return a;
     }
@@ -307,6 +315,14 @@ class InstanceJavaCollection {
 
     public String toString() {
         String result = "";
+
+        /*
+        The following if statement that checks if a list contains all null values
+        was adapted from the following link under "Check Array Null Using Java 8"
+        https://www.delftstack.com/howto/java/how-to-check-whether-an-array-is-null-empty/#check-array-null-using-java-8
+         */
+        if(list.stream().allMatch(Objects::isNull))
+            return "All list elements null";
         for(Object ob : list) {
             if(ob instanceof AllPrimitive || ob instanceof ArrayPrimitives)
                 result += ob.toString() + "\n";

@@ -70,12 +70,6 @@ public class Deserializer {
      * @return The instanced object described by the jsonObject
      */
     private static Object deserializeJsonClass(JsonObject jsonObject) {
-        /*
-        String className
-        int id
-        String type (object or array only)
-        fields
-         */
         Object result = null;
         String className = jsonObject.getString("class");
         className = className.replace("program.", "");
@@ -90,23 +84,21 @@ public class Deserializer {
             result = new AllPrimitive(deserializeJsonAllPrimitive(fields));
         }
         else if(className.matches("ArrayPrimitives")) { //object 3
-            result = new ArrayPrimitives(deserializeJsonArrayPrimitives(fields));
+            result = new ArrayPrimitives(deserializeJsonArrayPrimitives());
         }
         else if(className.matches("ArrayReferences")) { //object 4
             result = new ArrayReferences(deserializeJsonArrayReferences(fields));
         }
         else if(className.matches("ComplexWithReference")) {    //object 2
-            result = new ComplexWithReferences(deserializeJsonComplexWithReferences(fields));
+            result = new ComplexWithReferences(deserializeJsonComplexWithReferences());
         }
         else if(className.matches("InstanceJavaCollection")) {  //object 5
-
+            result = new InstanceJavaCollection(deserializeJsonInstanceJavaCollection());
         }
         else if(className.equals("[I")) {   //int array
             JsonArray entries = jsonObject.getJsonArray("entries");
             result = deserializeJsonIntArray(entries);
         }
-
-
         return result;
     }
 
@@ -128,7 +120,7 @@ public class Deserializer {
         return result;
     }
 
-    private static ArrayPrimitives deserializeJsonArrayPrimitives (JsonArray jsonFields) {
+    private static ArrayPrimitives deserializeJsonArrayPrimitives () {
         //deserialize the int[] inside of the ArrayPrimitives class
         ArrayPrimitives result = null;
         //set up array result, will be linked later
@@ -143,12 +135,10 @@ public class Deserializer {
         for(int i = 0; i < result.length; i++) {
             result[i] = Integer.parseInt(array.getJsonObject(i).getString("value"));
         }
-
-
         return result;
     }
 
-    private static ComplexWithReferences deserializeJsonComplexWithReferences (JsonArray jsonFields) {
+    private static ComplexWithReferences deserializeJsonComplexWithReferences () {
         ComplexWithReferences result = null;
 
         AllPrimitive obj1 = new AllPrimitive(null);
@@ -170,6 +160,12 @@ public class Deserializer {
             obj = null;
 
         result = new ArrayReferences(objArr);
+        return result;
+    }
+
+    private static InstanceJavaCollection deserializeJsonInstanceJavaCollection () {
+        InstanceJavaCollection result = null;
+        result = new InstanceJavaCollection(null, null, null, null);
         return result;
     }
 }

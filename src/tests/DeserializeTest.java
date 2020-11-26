@@ -218,4 +218,80 @@ public class DeserializeTest {
                 "\nIndex [6]: No elements" +
                 "\nIndex [7]: [1, 2, 3]", Deserializer.getArrayListPrintOut());
     }
+
+    @Test
+    public void testSingleInstanceJavaCollection() {
+        String data = "create object5\n" + "1\n" + "22.2\n" + "false\n" + "67\n" + "6.9\n" + "false\n" +
+                "99\n" + "101.1\n" + "true\n" + "1\n" + "3\n" + "5\n" + "7\n" + "end\n" + "send\n";
+
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+        sender.driver();
+
+        JsonObject jsonObject = sender.getJsonObject();
+        deserializer.deserializeObject(jsonObject.toString());
+
+        assertEquals("\nIndex [0]: All list elements null" +
+                "\nIndex [1]: null" +
+                "\nIndex [2]: null" +
+                "\nIndex [3]: null" +
+                "\nIndex [4]: null" +
+                "\nIndex [5]: [a: 1] [b: 22.2] [c: false]" +
+                "\nIndex [6]: [a: 67] [b: 6.9] [c: false]" +
+                "\nIndex [7]: [a: 99] [b: 101.1] [c: true]" +
+                "\nIndex [8]: No elements" +
+                "\nIndex [9]: [1, 3, 5, 7]" +
+                "\nIndex [10]: [a: 1] [b: 22.2] [c: false]" +
+                "\nIndex [11]: [a: 67] [b: 6.9] [c: false]" +
+                "\nIndex [12]: [a: 99] [b: 101.1] [c: true]" +
+                "\nIndex [13]: No elements" +
+                "\nIndex [14]: [1, 3, 5, 7]", Deserializer.getArrayListPrintOut());
+    }
+
+    @Test
+    public void testMultipleInstanceJavaCollection() {
+        String data1 = "create object5\n" + "1\n" + "22.2\n" + "false\n" + "67\n" + "6.9\n" + "false\n" +
+                "99\n" + "101.1\n" + "true\n" + "1\n" + "3\n" + "5\n" + "7\n" + "end\n";
+
+        String data2 = "create object5\n" + "3\n" + "69.420\n" + "true\n" + "6\n" + "4.20\n" + "true\n" +
+                "99\n" + "100\n" + "false\n" + "99\n" + "end\n" + "send\n";
+
+        String data = data1 + data2;
+
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+        sender.driver();
+
+        JsonObject jsonObject = sender.getJsonObject();
+        deserializer.deserializeObject(jsonObject.toString());
+
+        assertEquals("\nIndex [0]: All list elements null" +
+                "\nIndex [1]: null" +
+                "\nIndex [2]: null" +
+                "\nIndex [3]: null" +
+                "\nIndex [4]: null" +
+                "\nIndex [5]: [a: 1] [b: 22.2] [c: false]" +
+                "\nIndex [6]: [a: 67] [b: 6.9] [c: false]" +
+                "\nIndex [7]: [a: 99] [b: 101.1] [c: true]" +
+                "\nIndex [8]: No elements" +
+                "\nIndex [9]: [1, 3, 5, 7]" +
+                "\nIndex [10]: [a: 1] [b: 22.2] [c: false]" +
+                "\nIndex [11]: [a: 67] [b: 6.9] [c: false]" +
+                "\nIndex [12]: [a: 99] [b: 101.1] [c: true]" +
+                "\nIndex [13]: No elements" +
+                "\nIndex [14]: [1, 3, 5, 7]" +
+                "\nIndex [15]: All list elements null" +
+                "\nIndex [16]: null" +
+                "\nIndex [17]: null" +
+                "\nIndex [18]: null" +
+                "\nIndex [19]: null" +
+                "\nIndex [20]: [a: 3] [b: 69.42] [c: true]" +
+                "\nIndex [21]: [a: 6] [b: 4.2] [c: true]" +
+                "\nIndex [22]: [a: 99] [b: 100.0] [c: false]" +
+                "\nIndex [23]: No elements" +
+                "\nIndex [24]: [99]" +
+                "\nIndex [25]: [a: 3] [b: 69.42] [c: true]" +
+                "\nIndex [26]: [a: 6] [b: 4.2] [c: true]" +
+                "\nIndex [27]: [a: 99] [b: 100.0] [c: false]" +
+                "\nIndex [28]: No elements" +
+                "\nIndex [29]: [99]", Deserializer.getArrayListPrintOut());
+    }
 }

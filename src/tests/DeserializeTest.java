@@ -52,4 +52,37 @@ public class DeserializeTest {
                 "\nIndex [2]: \n[a: -2076] [b: -2.76] [c: false]" +
                 "\nIndex [3]: \n[a: 0] [b: 0.0] [c: true]", Deserializer.getArrayListPrintOut());
     }
+
+    @Test
+    public void testSinglePrimitiveArray() {
+        String data = "create object3\n" + "0\n" + "1\n" + "2\n" + "3\n" + "4\n" + "5\n" + "6\n" +
+                "7\n" + "end\n" + "send\n";
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+        sender.driver();
+
+        JsonObject jsonObject = sender.getJsonObject();
+        deserializer.deserializeObject(jsonObject.toString());
+
+        assertEquals("\nIndex [0]: No elements" +
+                "\nIndex [1]: [0, 1, 2, 3, 4, 5, 6, 7]", Deserializer.getArrayListPrintOut());
+    }
+
+    @Test
+    public void testMultiplePrimitiveArray() {
+        String data = "create object3\n" + "0\n" + "1\n" + "2\n" + "3\n" + "4\n" + "5\n" + "6\n" +
+                "7\n" + "end\n" + "create object3\n" + "12\n" + "end\n" + "create object3\n" + "99\n" + "95\n" +
+                "54\n" + "end\n" + "send\n";
+        System.setIn(new ByteArrayInputStream(data.getBytes()));
+        sender.driver();
+
+        JsonObject jsonObject = sender.getJsonObject();
+        deserializer.deserializeObject(jsonObject.toString());
+
+        assertEquals("\nIndex [0]: No elements" +
+                "\nIndex [1]: [0, 1, 2, 3, 4, 5, 6, 7]" +
+                "\nIndex [2]: No elements" +
+                "\nIndex [3]: [12]" +
+                "\nIndex [4]: No elements" +
+                "\nIndex [5]: [99, 95, 54]", Deserializer.getArrayListPrintOut());
+    }
 }

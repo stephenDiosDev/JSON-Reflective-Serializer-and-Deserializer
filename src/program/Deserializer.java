@@ -6,6 +6,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Deserializer {
     private static Object[] createdObjects;
@@ -54,7 +55,10 @@ public class Deserializer {
         String result = "";
 
         for(int j = 0; j < createdObjects.length; j++) {
-            result += "\nIndex [" + j + "]: " + createdObjects[j].toString();
+            if(createdObjects[j].getClass().isArray())
+                result += "\nIndex [" + j + "]: " + Arrays.toString((int[]) createdObjects[j]);
+            else
+                result += "\nIndex [" + j + "]: " + createdObjects[j].toString();
         }
 
         return result;
@@ -76,6 +80,7 @@ public class Deserializer {
         String className = jsonObject.getString("class");
         className = className.replace("program.", "");
 
+
         //System.out.println(jsonObject.toString().replace("\\", ""));
 
         if(className.matches("AllPrimitive")) {
@@ -83,7 +88,8 @@ public class Deserializer {
             result = new AllPrimitive(deserializeJsonAllPrimitive(fields));
         }
         else if(className.matches("ArrayPrimitives")) {
-
+            JsonArray fields = jsonObject.getJsonArray("fields");
+            result = new ArrayPrimitives(deserializeJsonArrayPrimitives(fields));
         }
         else if(className.matches("ArrayReferences")) {
 
@@ -94,6 +100,10 @@ public class Deserializer {
         else if(className.matches("InstanceJavaCollection")) {
 
         }
+        else if(className.equals("[I")) {   //int array
+            JsonArray entries = jsonObject.getJsonArray("entries");
+            result = deserializeJsonIntArray(entries);
+        }
 
 
         return result;
@@ -101,9 +111,9 @@ public class Deserializer {
 
     //breaks down the AllPrimitive jsonString
     private static AllPrimitive deserializeJsonAllPrimitive (JsonArray jsonFields) {
-
         AllPrimitive result = null;
 
+        //set primitive values since they won't occur later in the json string
         int a;
         double b;
         boolean c;
@@ -113,6 +123,26 @@ public class Deserializer {
         c = Boolean.parseBoolean(jsonFields.getJsonObject(2).getString("value"));
 
         result = new AllPrimitive(a,b,c);
+
+        return result;
+    }
+
+    private static ArrayPrimitives deserializeJsonArrayPrimitives (JsonArray jsonFields) {
+        //deserialize the int[] inside of the ArrayPrimitives class
+        ArrayPrimitives result = null;
+        //set up array result, will be linked later
+        int[] arr = new int[0];
+
+        result = new ArrayPrimitives(arr);
+        return result;
+    }
+
+    private static int[] deserializeJsonIntArray(JsonArray array) {
+        int[] result = new int[array.size()];
+        for(int i = 0; i < result.length; i++) {
+            result[i] = Integer.parseInt(array.getJsonObject(i).getString("value"));
+        }
+
 
         return result;
     }

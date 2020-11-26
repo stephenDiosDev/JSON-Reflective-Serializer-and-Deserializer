@@ -134,6 +134,11 @@ class ArrayPrimitives {
         setMyArr(input);
     }
 
+    //copy constructor
+    public ArrayPrimitives(ArrayPrimitives object) {
+        setMyArr(object.getMyArr());
+    }
+
     public int[] getMyArr() {
         return myArr;
     }
@@ -147,6 +152,9 @@ class ArrayPrimitives {
 
     public String toString() {
         String result = "\n";
+
+        if(myArr.length == 0)
+            return "No elements";
 
         for(int i = 0; i < myArr.length; i++) {
             result += "[Index: " + i + "]: " + Integer.toString(myArr[i]) + "\n";

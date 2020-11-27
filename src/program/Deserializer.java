@@ -138,9 +138,10 @@ public class Deserializer {
             int obj2RefID = references.get(id).get(1);
             int arr1RefID = references.get(id).get(2);
 
-            ((AllPrimitive)createdObjects[id]).setA((int)stitchReferences(obj1RefID, references));
-            ((AllPrimitive)createdObjects[id]).setB((double)stitchReferences(obj2RefID, references));
-            ((ArrayPrimitives)createdObjects[id]).setMyArr((int[])stitchReferences(arr1RefID, references));
+            ((ComplexWithReferences)createdObjects[id]).setObj1((AllPrimitive)stitchReferences(obj1RefID, references));
+            ((ComplexWithReferences)createdObjects[id]).setObj2((AllPrimitive)stitchReferences(obj2RefID, references));
+            ((ComplexWithReferences)createdObjects[id]).setArr1((ArrayPrimitives) stitchReferences(arr1RefID, references));
+
         }
         else if(className.equals("InstanceJavaCollection")) {
             /*

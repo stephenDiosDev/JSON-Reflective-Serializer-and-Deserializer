@@ -65,7 +65,8 @@ class AllPrimitive {
     }
 
     public String toString() {
-        String result = "[a: " + Integer.toString(getA()) + "] [b: " + Double.toString(getB()) + "] [c: " + Boolean.toString(isC()) + "]";
+        String result = "\n[AllPrimitives (Object1)]\n" + "\t" +
+                "[a: " + Integer.toString(getA()) + "] [b: " + Double.toString(getB()) + "] [c: " + Boolean.toString(isC()) + "]";
         return result;
     }
 }
@@ -122,7 +123,10 @@ class ComplexWithReferences {
     }
 
     public String toString() {
-        String result = getObj1().toString() + "\n" + getObj2().toString() + "\n" + getArr1().toString();
+        String result = "\n[Complex With References (Object2)]\n" +
+                "\t" + getObj1().toString() + "\n" +
+                "\t" + getObj2().toString() + "\n" +
+                "\t" + getArr1().toString();
         return result;
     }
 }
@@ -158,13 +162,13 @@ class ArrayPrimitives {
     }
 
     public String toString() {
-        String result = "\n";
+        String result = "\n[Array of Primitives (Object3)]\n";
 
         if(myArr.length == 0)
-            return "No elements";
+            return "\t" + "No elements";
 
         for(int i = 0; i < myArr.length; i++) {
-            result += "[Index: " + i + "]: " + Integer.toString(myArr[i]) + "\n";
+            result += "\t" + "[Index: " + i + "]: " + Integer.toString(myArr[i]) + "\n";
         }
 
         return result;
@@ -195,7 +199,7 @@ class ArrayReferences {
     }
 
     public String toString() {
-        String result = "";
+        String result = "\n[Array of References (Object4)]\n";
 
         /*
         The following if statement that checks if an array contains all null values
@@ -204,29 +208,29 @@ class ArrayReferences {
          */
         //checks if the entire array is null values
         if(Arrays.stream(getMyArr()).allMatch(Objects::isNull))
-            return "All elements null";
+            return "\tAll elements null";
 
         for(int i = 0; i < myArr.length; i++) {
-            result += "[Index: " + i + "]: ";
+            result += "\t" + "[Index: " + i + "]: ";
             if(myArr[i] instanceof AllPrimitive) {
                 AllPrimitive a = (AllPrimitive) myArr[i];
-                result += a.toString() + "\n";
+                result += "\t" + a.toString() + "\n";
             }
             else if(myArr[i] instanceof ComplexWithReferences) {
                 ComplexWithReferences a = (ComplexWithReferences) myArr[i];
-                result += a.toString() + "\n";
+                result += "\t" + a.toString() + "\n";
             }
             else if(myArr[i] instanceof ArrayPrimitives) {
                 ArrayPrimitives a = (ArrayPrimitives) myArr[i];
-                result += a.toString() + "\n";
+                result += "\t" + a.toString() + "\n";
             }
             else if(myArr[i] instanceof ArrayReferences) {
                 ArrayReferences a = (ArrayReferences) myArr[i];
-                result += a.toString() + "\n";
+                result += "\t" + a.toString() + "\n";
             }
             else if(myArr[i] instanceof InstanceJavaCollection) {
                 InstanceJavaCollection a = (InstanceJavaCollection) myArr[i];
-                result += a.toString() + "\n";
+                result += "\t" + a.toString() + "\n";
             }
         }
 
@@ -315,7 +319,7 @@ class InstanceJavaCollection {
     }
 
     public String toString() {
-        String result = "";
+        String result = "\n[Instance Java Collection (Object5)]\n";
 
         /*
         The following if statement that checks if a list contains all null values
@@ -323,10 +327,10 @@ class InstanceJavaCollection {
         https://www.delftstack.com/howto/java/how-to-check-whether-an-array-is-null-empty/#check-array-null-using-java-8
          */
         if(list.stream().allMatch(Objects::isNull))
-            return "All list elements null";
+            return "\t" + "All list elements null";
         for(Object ob : list) {
             if(ob instanceof AllPrimitive || ob instanceof ArrayPrimitives)
-                result += ob.toString() + "\n";
+                result += "\t" + ob.toString() + "\n";
         }
         return result;
     }

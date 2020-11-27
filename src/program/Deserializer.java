@@ -2,8 +2,10 @@ package program;
 
 import javax.json.*;
 import java.io.StringReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.IdentityHashMap;
 
 public class Deserializer {
     private static Object[] createdObjects;
@@ -111,7 +113,7 @@ public class Deserializer {
                // System.out.println("null class");
             }
         }
-        System.out.println(debugOutput(result));
+        //System.out.println(debugOutput(result));
 //TODO switch the DeserialiseTest output to be using this debugOuput call for ease of use
         return result;
     }

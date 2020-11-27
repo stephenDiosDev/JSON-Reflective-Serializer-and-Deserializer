@@ -1,5 +1,8 @@
 package program;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,8 +12,6 @@ import java.util.Scanner;
 public class Visualizer {
     private ObjectCreator objectCreator;
     public ArrayList<Object> userObjects = new ArrayList<>();
-
-    public ArrayList<Integer> hashValues = new ArrayList<>();
 
     public Visualizer() {
         objectCreator = new ObjectCreator();
@@ -199,23 +200,27 @@ public class Visualizer {
     }
 
     public static void printDeserializerOutput(ArrayList<Object> objectList) {
-
+        ArrayList<Integer> hashValues = new ArrayList<>();
+        for(Object obj : objectList) {
+            inspect(obj, hashValues);
+            System.out.println();
+        }
     }
 
     /*
     All code below this comment was taken straight from my assignment 2 and modified for this assignment
      */
 
-    private void inspect(Object obj) {
+    private static void inspect(Object obj, ArrayList<Integer> hashValues) {
         Class c = obj.getClass();
         if(!hashValues.contains(obj.hashCode())) {
             hashValues.add(obj.hashCode());
-            inspectClass(c, obj, 0);
+            inspectClass(c, obj, 0, hashValues);
         }
     }
 
     //the method that inspects the CLASS
-    private void inspectClass(Class c, Object obj, int depth) {
+    private static void inspectClass(Class c, Object obj, int depth, ArrayList<Integer> hashValues) {
 
         if(!c.getName().equals("java.lang.reflect.Field")) {     //we don't want to inspect Field class
             hashValues.add(c.hashCode());
@@ -231,25 +236,20 @@ public class Visualizer {
             if(c.getSuperclass() != null) { //superclass found
                 System.out.println(c.getSuperclass().getName());
                 int newDepth = depth + 1;
-                inspectClass(c.getSuperclass(), obj, recursive, newDepth);
+                inspectClass(c.getSuperclass(), obj, newDepth, hashValues);
             }
             else {
                 System.out.println("NONE");
             }
 
-            inspectInterface(c, obj, recursive, depth);
+            inspectInterface(c, obj, depth);
             //Finds any interfaces and calls inspectInterface on it according to recursive and depth
 
-            inspectConstructor(c, obj, depth);
-            //probably recursively called on each new item so always just print to standard out
-
-            inspectMethods(c, obj, depth);
-
-            inspectFields(c, obj, recursive, depth);
+            inspectFields(c, obj, depth);
         }
     }
 
-    private void inspectInterface(Class c, Object obj, int depth) {
+    private static void inspectInterface(Class c, Object obj, int depth) {
         String tabs = "";
         for(int i = 0; i < depth; i++) {
             tabs += "\t";
@@ -270,7 +270,7 @@ public class Visualizer {
         }
     }
 
-    private void inspectFields(Class c, Object obj, int depth) {
+    private static void inspectFields(Class c, Object obj, int depth) {
         //name, type, modifiers, current value (if reference && recursion == true -> recurse, else not)
         String tabs = "";
         for(int i = 0; i < depth; i++) {
@@ -306,22 +306,11 @@ public class Visualizer {
                             if(field.get(obj) instanceof Object[]) {   //not primitive
                                 arrayContents = (Object[]) field.get(obj);
                                 for(Object ob : arrayContents) {
-                                    if(recursive) {
-                                        if(ob != null) {
-                                            int newDepth = depth + 1;
-                                            inspectClass(ob.getClass(), obj, recursive, newDepth);
-                                        }
-                                        else {
-                                            System.out.println(tabs + "   Value: null" );
-                                        }
-                                    }
-                                    else {
-                                        System.out.print(tabs + "   Value: ");
-                                        try {
-                                            System.out.println(ob.getClass().getName() + "@" + field.hashCode());
-                                        } catch (NullPointerException e) {
-                                            System.out.println("null");
-                                        }
+                                    System.out.print(tabs + "   Value: ");
+                                    try {
+                                        System.out.println(ob.getClass().getName() + "@" + field.hashCode());
+                                    } catch (NullPointerException e) {
+                                        System.out.println("null");
                                     }
                                 }
                             }
@@ -337,25 +326,9 @@ public class Visualizer {
                         }
                     }
                     else {  //not array
-                        if(recursive) {
-                            try {
-                                if(field.get(obj) instanceof String) {
-                                    System.out.println(tabs + "  Value: " + field.get(obj).toString());
-                                }
-                                else {
-                                    int newDepth = depth + 1;
-                                    inspectClass(field.getClass(), obj, recursive, newDepth);
-                                }
-                            } catch (IllegalAccessException e) {
-                            }
-                        }
-                        else {
-
-                            System.out.println(tabs + "  " + field.getClass().getName() + "@" + field.hashCode());
-                        }
+                        System.out.println(tabs + "  " + field.getClass().getName() + "@" + field.hashCode());
                     }
                 }
-
             }
         }
         else {

@@ -70,33 +70,61 @@ public class Deserializer {
         for(int i = 0; i < allObjects.length; i++) {
             if(allObjects[i] != null) {
                 String className = allObjects[i].getClass().getSimpleName();
-                System.out.println(allObjects[i].getClass().getSimpleName());
-                //variable order in object is order of references in references arraylist
+                
+                //ArrayList is [ID][reference value]
                 if(className.equals("ArrayPrimitives")) {
-
+                    int referenceIndex = references.get(i).get(0);  //we know it will only have 1 reference
+                    //((ArrayPrimitives)allObjects[i]).setMyArr((int[])allObjects[referenceIndex]);
+                    ((ArrayPrimitives)allObjects[i]).setMyArr((int[])stitchReferences(referenceIndex, references));
+                    result.add(allObjects[i]);
                 }
                 else if(className.equals("ArrayReferences")) {
-
+                    int referenceIndex = references.get(i).get(0);  //again, will only have 1 ref to Object[]
+                    //we need to stitch Object[] together first
+                    ((ArrayReferences)allObjects[i]).setMyArr((Object[])stitchReferences(referenceIndex, references));
+                    result.add(allObjects[i]);
                 }
                 else if(className.equals("ComplexWithReferences")) {
 
+                    result.add(allObjects[i]);
                 }
                 else if(className.equals("InstanceJavaCollection")) {
 
+                    result.add(allObjects[i]);
                 }
-                else if(className.equals("int[]")) {
-
+                else if(className.equals("AllPrimitive")) {
+                    //since it only holds primitives, we don't need to connect any references
+                    result.add(allObjects[i]);
                 }
                 else if(className.equals("ArrayList")) {
-                    
+
                 }
+
+
             }
             else {  //caused by elements of ArrayList
                 System.out.println("null class");
             }
         }
+        System.out.println("DEBUG*****DEBUG*****DEBUG");
+        for(Object obj : result) {
+            System.out.println(obj.toString());
+        }
+        System.out.println("DEBUG*****DEBUG*****DEBUG");
 
         return result;
+    }
+
+    /**
+     * Stitches the object with id based on its references to other objects
+     * @param id
+     * @param references
+     * @return
+     */
+    private static Object stitchReferences(int id, ArrayList<ArrayList<Integer>> references) {
+
+
+        return createdObjects[id];
     }
 
     /**

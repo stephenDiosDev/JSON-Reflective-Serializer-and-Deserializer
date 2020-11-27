@@ -1,5 +1,8 @@
 package program;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -194,5 +197,147 @@ public class Visualizer {
         }
 
         return result;
+    }
+
+    public static void printDeserializerOutput(ArrayList<Object> objectList) {
+        ArrayList<Integer> hashValues = new ArrayList<>();
+        for(Object obj : objectList) {
+            inspect(obj, hashValues);
+            System.out.println();
+        }
+    }
+
+    /*
+    All code below this comment was taken straight from my assignment 2 and modified for this assignment
+     */
+
+    private static void inspect(Object obj, ArrayList<Integer> hashValues) {
+        Class c = obj.getClass();
+        if(!hashValues.contains(obj.hashCode())) {
+            hashValues.add(obj.hashCode());
+            inspectClass(c, obj, 0, hashValues);
+        }
+    }
+
+    //the method that inspects the CLASS
+    private static void inspectClass(Class c, Object obj, int depth, ArrayList<Integer> hashValues) {
+
+        if(!c.getName().equals("java.lang.reflect.Field")) {     //we don't want to inspect Field class
+            hashValues.add(c.hashCode());
+
+            String tabs = "";
+            for(int i = 0; i < depth; i++) {
+                tabs += "\t";
+            }
+            System.out.println(tabs + "CLASS");
+            System.out.println(tabs + "Class: " + c.getName());
+
+
+            System.out.print(tabs + "SUPERCLASS -> ");
+            if(c.getSuperclass() != null) { //superclass found
+                System.out.println(c.getSuperclass().getName());
+                int newDepth = depth + 1;
+                inspectClass(c.getSuperclass(), obj, newDepth, hashValues);
+            }
+            else {
+                System.out.println("NONE");
+            }
+
+            inspectInterface(c, obj, depth);
+            //Finds any interfaces and calls inspectInterface on it according to recursive and depth
+
+            inspectFields(c, obj, depth);
+        }
+    }
+
+    private static void inspectInterface(Class c, Object obj, int depth) {
+        String tabs = "";
+        for(int i = 0; i < depth; i++) {
+            tabs += "\t";
+        }
+        System.out.println(tabs + "INTERFACES ( " + c.getName() + " )");
+
+        if(c.getInterfaces().length > 0) {  //interfaces exist
+            System.out.println(tabs + "Interfaces ->");
+            Class[] interfaceList = c.getInterfaces();
+            for(int i = 0; i < interfaceList.length; i++) {
+                int newDepth = depth + 1;
+                //inspectClass(interfaceList[i].getClass(), obj, recursive, newDepth);
+                System.out.println(tabs + interfaceList[i].getName());
+            }
+        }
+        else {
+            System.out.println(tabs + "Interfaces -> NONE");
+        }
+    }
+
+    private static void inspectFields(Class c, Object obj, int depth) {
+        //name, type, modifiers, current value (if reference && recursion == true -> recurse, else not)
+        String tabs = "";
+        for(int i = 0; i < depth; i++) {
+            tabs += "\t";
+        }
+
+        System.out.println(tabs + "FIELDS ( " + c.getName() + " )");
+        Field[] fields = c.getDeclaredFields();
+        System.out.print(tabs + "Fields -> ");
+
+        if(fields.length > 0) { //fields found
+            System.out.println();
+            for(Field field : fields) {
+                field.setAccessible(true);
+
+                System.out.println(tabs + " FIELD");
+                System.out.println(tabs + "  Name: " + field.getName());
+
+
+                System.out.println(tabs + "  Type: " + field.getType());
+                System.out.println(tabs + "  Modifiers: " + Modifier.toString(field.getModifiers()));
+                if(field.getType().isPrimitive()) {
+                    try {
+                        System.out.print(tabs + "  Value: ");
+                        System.out.println(field.get(obj));
+                    } catch (IllegalAccessException e) {
+                        System.out.println("ILLEGAL ACCESS EXCEPTION: UNABLE TO OBTAIN FIELD VALUE");
+                    }
+                }
+                else {  //reference/object/array type
+                    if(field.getType().isArray()) {
+                        System.out.println(tabs + "  Component Type: " + field.getType());
+                        try{
+                            System.out.println(tabs + "  Length: " + Array.getLength(field.get(obj)));
+                            Object[] arrayContents;
+                            System.out.println(tabs + "  Array Entries-> ");
+                            if(field.get(obj) instanceof Object[]) {   //not primitive
+                                arrayContents = (Object[]) field.get(obj);
+                                for(Object ob : arrayContents) {
+                                    System.out.print(tabs + "   Value: ");
+                                    try {
+                                        System.out.println(ob.getClass().getName());// + "@" + field.hashCode());
+                                    } catch (NullPointerException e) {
+                                        System.out.println("null");
+                                    }
+                                }
+                            }
+                            else {  //primitive
+                                arrayContents = new Object[Array.getLength(field.get(obj))];
+                                for(int i = 0; i < Array.getLength(field.get(obj)); i++) {
+                                    arrayContents[i] = Array.get(field.get(obj), i);
+                                    System.out.println(tabs + "   Value: " + String.valueOf(arrayContents[i]));
+                                }
+                            }
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else {  //not array
+                        System.out.println(tabs + "  " + field.getClass().getName() + "@" + field.hashCode());
+                    }
+                }
+            }
+        }
+        else {
+            System.out.println("NONE");
+        }
     }
 }

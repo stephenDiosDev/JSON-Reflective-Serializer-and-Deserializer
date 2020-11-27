@@ -232,6 +232,9 @@ public class Visualizer {
             System.out.println(tabs + "CLASS");
             System.out.println(tabs + "Class: " + c.getName());
 
+            //System.out.println(tabs + "HASHCODE");
+            //System.out.println(tabs + "HashCode: " + obj.hashCode());
+
             System.out.print(tabs + "SUPERCLASS -> ");
             if(c.getSuperclass() != null) { //superclass found
                 System.out.println(c.getSuperclass().getName());
@@ -286,6 +289,13 @@ public class Visualizer {
                 field.setAccessible(true);
                 System.out.println(tabs + " FIELD");
                 System.out.println(tabs + "  Name: " + field.getName());
+
+                try {
+                    //System.out.println(tabs + "  HashCode: " + field.get(obj).hashCode());
+                } catch (Exception e) {
+
+                }
+
                 System.out.println(tabs + "  Type: " + field.getType());
                 System.out.println(tabs + "  Modifiers: " + Modifier.toString(field.getModifiers()));
                 if(field.getType().isPrimitive()) {

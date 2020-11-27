@@ -44,7 +44,7 @@ public class DeserializeTest {
         String data = "create object1\n" + "22\n" + "69.9\n" + "true\n" +
                 "create object1\n" + "13\n" + "102.76\n" + "false\n" +
                 "create object1\n" + "-2076\n" + "-2.76\n" + "false\n" +
-                "create object1\n" + "0\n" + "0.0\n" + "true\n" + "send\n";;
+                "create object1\n" + "0\n" + "0.0\n" + "true\n" + "send\n";
         System.setIn(new ByteArrayInputStream(data.getBytes()));
         sender.driver();
 

@@ -7,7 +7,8 @@ import org.junit.runners.Suite;
 
 @Suite.SuiteClasses({
         ObjectCreationTest.class,
-        DeserializeTest.class
+        DeserializeTest.class,
+        VisualizerOutputTest.class
 })
 
 public class TestSuite {

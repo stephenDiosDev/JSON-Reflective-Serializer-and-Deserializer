@@ -56,15 +56,33 @@ public class Deserializer {
         //debug
         //System.out.println(getArrayListPrintOut());
 
-        connectReferences(objectArray);
+        ArrayList<ArrayList<Integer>> references = connectReferences(objectArray);
+
+        objects = instantiateObjectsViaReferences(createdObjects, references);
+
 
         return objects;
+    }
+
+    private static ArrayList<Object> instantiateObjectsViaReferences(Object[] allObjects, ArrayList<ArrayList<Integer>> references) {
+        ArrayList<Object> result = new ArrayList<>();
+
+        for(int i = 0; i < allObjects.length; i++) {
+            if(allObjects[i] != null) {
+                System.out.println(allObjects[i].getClass().getSimpleName());
+            }
+            else {
+                System.out.println("null class");
+            }
+        }
+
+        return result;
     }
 
     /**
      * Connects all the reference objects by reference ID to the ID object it belongs to
      */
-    private static void connectReferences(JsonArray jsonArray) {
+    private static ArrayList<ArrayList<Integer>> connectReferences(JsonArray jsonArray) {
         ArrayList<ArrayList<Integer>> references = new ArrayList<>();     //[ID][references for that ID]
         JsonReader jsonReader;
         JsonObject jsonObject;
@@ -105,7 +123,7 @@ public class Deserializer {
             }
         }
         //debugConnectedPrintout(references);
-
+        return references;
     }
 
     public static void debugConnectedPrintout(ArrayList<ArrayList<Integer>> references) {
@@ -224,12 +242,12 @@ public class Deserializer {
     }
 
     private static ComplexWithReferences deserializeJsonComplexWithReferences () {
-        ComplexWithReferences result = null;
+        ComplexWithReferences result = new ComplexWithReferences();
 
-        AllPrimitive obj1 = new AllPrimitive(null);
-        AllPrimitive obj2 = new AllPrimitive(null);
+        AllPrimitive obj1 = new AllPrimitive();
+        AllPrimitive obj2 = new AllPrimitive();
 
-        ArrayPrimitives arr1 = new ArrayPrimitives((int[]) null);
+        ArrayPrimitives arr1 = new ArrayPrimitives();
 
         result = new ComplexWithReferences(obj1, obj2, arr1);
 
@@ -242,7 +260,7 @@ public class Deserializer {
         Object[] objArr = new Object[jsonFields.size()];
 
         for(Object obj : objArr)
-            obj = null;
+            obj = new Object();
 
         result = new ArrayReferences(objArr);
         return result;
@@ -250,7 +268,7 @@ public class Deserializer {
 
     private static InstanceJavaCollection deserializeJsonInstanceJavaCollection () {
         InstanceJavaCollection result = null;
-        result = new InstanceJavaCollection(null, null, null, null);
+        result = new InstanceJavaCollection();
         return result;
     }
 }

@@ -230,7 +230,19 @@ public class DeserializeTest {
         JsonObject jsonObject = sender.getJsonObject();
         deserializer.deserializeObject(jsonObject.toString());
 
-        assertEquals("\nIndex [0]: All list elements null" +
+        assertEquals("\nIndex [0]: [a: 1] [b: 2.0] [c: true]\n" +
+                "[a: -1] [b: -2.0] [c: false]\n" +
+                "[a: 3] [b: 5069.8] [c: true]\n" +
+                "\n" +
+                "[Index: 0]: 1\n" +
+                "[Index: 1]: 3\n" +
+                "[Index: 2]: 5\n" +
+                "[Index: 3]: 7\n" +
+                "[Index: 4]: 11\n" +
+                "[Index: 5]: 13\n" +
+                "[Index: 6]: 17\n" +
+                "[Index: 7]: 19\n" +
+                "\n" +
                 "\nIndex [1]: null" +
                 "\nIndex [2]: null" +
                 "\nIndex [3]: null" +
@@ -263,7 +275,18 @@ public class DeserializeTest {
         JsonObject jsonObject = sender.getJsonObject();
         deserializer.deserializeObject(jsonObject.toString());
 
-        assertEquals("\nIndex [0]: All list elements null" +
+        assertEquals("\nIndex [0]: [a: 1] [b: 2.0] [c: true]\n" +
+                "[a: -1] [b: -2.0] [c: false]\n" +
+                "[a: 3] [b: 5069.8] [c: true]\n" +
+                "\n" +
+                "[Index: 0]: 1\n" +
+                "[Index: 1]: 3\n" +
+                "[Index: 2]: 5\n" +
+                "[Index: 3]: 7\n" +
+                "[Index: 4]: 11\n" +
+                "[Index: 5]: 13\n" +
+                "[Index: 6]: 17\n" +
+                "[Index: 7]: 19\n\n" +
                 "\nIndex [1]: null" +
                 "\nIndex [2]: null" +
                 "\nIndex [3]: null" +
@@ -278,7 +301,18 @@ public class DeserializeTest {
                 "\nIndex [12]: [a: 99] [b: 101.1] [c: true]" +
                 "\nIndex [13]: No elements" +
                 "\nIndex [14]: [1, 3, 5, 7]" +
-                "\nIndex [15]: All list elements null" +
+                "\nIndex [15]: [a: 1] [b: 2.0] [c: true]\n" +
+                "[a: -1] [b: -2.0] [c: false]\n" +
+                "[a: 3] [b: 5069.8] [c: true]\n" +
+                "\n" +
+                "[Index: 0]: 1\n" +
+                "[Index: 1]: 3\n" +
+                "[Index: 2]: 5\n" +
+                "[Index: 3]: 7\n" +
+                "[Index: 4]: 11\n" +
+                "[Index: 5]: 13\n" +
+                "[Index: 6]: 17\n" +
+                "[Index: 7]: 19\n\n" +
                 "\nIndex [16]: null" +
                 "\nIndex [17]: null" +
                 "\nIndex [18]: null" +

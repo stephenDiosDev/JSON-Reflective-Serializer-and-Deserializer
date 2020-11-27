@@ -234,7 +234,7 @@ class ArrayReferences {
 }
 
 class InstanceJavaCollection {
-    private ArrayList<Object> list;
+    private ArrayList<Object> list = new ArrayList<>();
 
     private AllPrimitive a;
     private AllPrimitive b;

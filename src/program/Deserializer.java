@@ -36,7 +36,7 @@ public class Deserializer {
             jsonObject = jsonReader.readObject();
 
             //detailed jsonObject printout
-            //System.out.println(jsonObject.toString().replace("\\", ""));
+            System.out.println(jsonObject.toString().replace("\\", ""));
 
             int id = jsonObject.getInt("id");
             //System.out.println("Object ID: " + id);
@@ -73,47 +73,58 @@ public class Deserializer {
 
                 //ArrayList is [ID][reference value]
                 if(className.equals("ArrayPrimitives")) {
-                    int referenceIndex = references.get(i).get(0);  //we know it will only have 1 reference
-                    ((ArrayPrimitives)allObjects[i]).setMyArr((int[])stitchReferences(referenceIndex, references));
+                    //int referenceIndex = references.get(i).get(0);  //we know it will only have 1 reference
+                    //((ArrayPrimitives)allObjects[i]).setMyArr((int[])stitchReferences(referenceIndex, references));
+                    allObjects[i] = stitchReferences(i, references);
                     result.add(allObjects[i]);
                 }
                 else if(className.equals("ArrayReferences")) {
-                    int referenceIndex = references.get(i).get(0);  //again, will only have 1 ref to Object[]
-                    //we need to stitch Object[] together first
-                    ((ArrayReferences)allObjects[i]).setMyArr((Object[])stitchReferences(referenceIndex, references));
+                    //int referenceIndex = references.get(i).get(0);  //again, will only have 1 ref to Object[]
+                    //((ArrayReferences)allObjects[i]).setMyArr((Object[])stitchReferences(referenceIndex, references));
+                    allObjects[i] = stitchReferences(i, references);
                     result.add(allObjects[i]);
                 }
                 else if(className.equals("ComplexWithReferences")) {
-                    int obj1RefID = references.get(i).get(0);
-                    int obj2RefID = references.get(i).get(1);
-                    int arr1RefID = references.get(i).get(2);
+                    //int obj1RefID = references.get(i).get(0);
+                    //int obj2RefID = references.get(i).get(1);
+                    //int arr1RefID = references.get(i).get(2);
 
-                    ((ComplexWithReferences)allObjects[i]).setObj1((AllPrimitive) stitchReferences(obj1RefID, references));
-                    ((ComplexWithReferences)allObjects[i]).setObj2((AllPrimitive) stitchReferences(obj2RefID, references));
-                    ((ComplexWithReferences)allObjects[i]).setArr1((ArrayPrimitives) stitchReferences(arr1RefID, references));
+                    //((ComplexWithReferences)allObjects[i]).setObj1((AllPrimitive) stitchReferences(obj1RefID, references));
+                    //((ComplexWithReferences)allObjects[i]).setObj2((AllPrimitive) stitchReferences(obj2RefID, references));
+                    //((ComplexWithReferences)allObjects[i]).setArr1((ArrayPrimitives) stitchReferences(arr1RefID, references));
+
+                    allObjects[i] = stitchReferences(i, references);
 
                     result.add(allObjects[i]);
                 }
                 else if(className.equals("InstanceJavaCollection")) {
-
+                    allObjects[i] = stitchReferences(i, references);
                     result.add(allObjects[i]);
                 }
                 else if(className.equals("AllPrimitive")) {
                     //since it only holds primitives, we don't need to connect any references
+                    allObjects[i] = stitchReferences(i, references);
                     result.add(allObjects[i]);
                 }
             }
             else {  //caused by elements of ArrayList
-                System.out.println("null class");
+               // System.out.println("null class");
             }
         }
-        System.out.println("DEBUG*****DEBUG*****DEBUG");
-        for(Object obj : result) {
-            System.out.println(obj.toString());
-        }
-        System.out.println("DEBUG*****DEBUG*****DEBUG");
-
+        System.out.println(debugOutput(result));
+//TODO switch the DeserialiseTest output to be using this debugOuput call for ease of use
         return result;
+    }
+
+    public static String debugOutput(ArrayList<Object> result) {
+        String outputResult = "";
+        outputResult += "DEBUG*****DEBUG*****DEBUG\n";
+        for(Object obj : result) {
+            outputResult += obj.toString() + "\n";
+        }
+        outputResult += "DEBUG*****DEBUG*****DEBUG\n";
+
+        return outputResult;
     }
 
     /**
@@ -144,15 +155,23 @@ public class Deserializer {
 
         }
         else if(className.equals("InstanceJavaCollection")) {
-            /*
-            ArrayList<Object> list
-            AllPrimitive a
-            AllPrimitive b
-            AllPrimitive c
-            ArrayPrimitives arr
-             */
-        }
-        else if(className.equals("ArrayList")) {
+            int listRefID = references.get(id).get(0);
+            int aRefID = references.get(id).get(1);
+            int bRefID = references.get(id).get(2);
+            int cRefID = references.get(id).get(3);
+            int arrRefID = references.get(id).get(4);
+
+            ((InstanceJavaCollection)createdObjects[id]).setA((AllPrimitive)stitchReferences(aRefID, references));
+            ((InstanceJavaCollection)createdObjects[id]).setB((AllPrimitive)stitchReferences(bRefID, references));
+            ((InstanceJavaCollection)createdObjects[id]).setC((AllPrimitive)stitchReferences(cRefID, references));
+            ((InstanceJavaCollection)createdObjects[id]).setArr((ArrayPrimitives) stitchReferences(arrRefID, references));
+            //since arrayList has private components, I cannot stitch that back together
+            ArrayList<Object> newList = new ArrayList<>();
+            newList.add(((InstanceJavaCollection)createdObjects[id]).getA());
+            newList.add(((InstanceJavaCollection)createdObjects[id]).getB());
+            newList.add(((InstanceJavaCollection)createdObjects[id]).getC());
+            newList.add(((InstanceJavaCollection)createdObjects[id]).getArr());
+            ((InstanceJavaCollection)createdObjects[id]).setList(newList);
 
         }
         else if(className.equals("Object[]")) {
@@ -214,7 +233,7 @@ public class Deserializer {
     }
 
     public static void debugConnectedPrintout(ArrayList<ArrayList<Integer>> references) {
-        System.out.println("PRINTING REFERENCES LIST DEBUG:\n");
+       // System.out.println("PRINTING REFERENCES LIST DEBUG:\n");
         for(int ID = 0; ID < references.size(); ID++) {
             for(Integer ref : references.get(ID)) {
                 System.out.println("[ID: " + ID + "] has [Reference: " + ref + "]");
@@ -265,7 +284,7 @@ public class Deserializer {
         className = className.replace("program.", "");
 
 
-        System.out.println(jsonObject.toString().replace("\\", ""));
+        //System.out.println(jsonObject.toString().replace("\\", ""));
         JsonArray fields = null;
         if(!className.equals("[I"))
             fields = jsonObject.getJsonArray("fields");
@@ -361,7 +380,7 @@ public class Deserializer {
         ArrayReferences result = null;
 
         Object[] objArr = new Object[jsonFields.size()];
-        System.out.println("OBJECT ARRAY IS SIZE: " + objArr.length);
+        //System.out.println("OBJECT ARRAY IS SIZE: " + objArr.length);
 
         for(int i = 0; i < objArr.length; i++) {
             objArr[i] = new Object();

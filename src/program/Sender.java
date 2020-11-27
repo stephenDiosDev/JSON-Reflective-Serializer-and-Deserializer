@@ -4,6 +4,11 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 
@@ -12,11 +17,14 @@ public class Sender {
 
     private ArrayList<Object> objects;  //holds the users declared objects
 
+    private JsonObject jsonObject;  //holds the complete json objects array
+
     public Sender(boolean run) {
         visualizer = new Visualizer();
 
-        if(run)
+        if(run) {
             this.driver();
+        }
     }
 
     public void driver() {
@@ -26,7 +34,7 @@ public class Sender {
 
         ArrayList<String> outputStrings = new ArrayList<>();
 
-        JsonObject jsonObject;
+
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
         JsonArrayBuilder jsonFieldArray = Json.createArrayBuilder();
 
@@ -34,9 +42,6 @@ public class Sender {
             //jsonFieldArray.add(Serializer.serializeObject(ob, hashMap, jsonStrings));
             jsonStrings.add(Serializer.serializeObject(ob, hashMap, jsonStrings));
         }
-
-        //jsonObjectBuilder.add("objects", jsonFieldArray.build());
-        //System.out.println(jsonObjectBuilder.build().toString());
 
         //remove any empty strings
         for(String s : jsonStrings) {
@@ -51,11 +56,46 @@ public class Sender {
         jsonObjectBuilder.add("objects", jsonFieldArray.build());
         jsonObject = jsonObjectBuilder.build();
         //System.out.println(jsonObject.toString());    //debug, but not pretty to look at
+    }
 
-        //network code
+    /**
+     * Sends the json object to the receiver
+     */
+    public void sendJson() {
+        /*
+        Open server connection
+        Wait until the client (receiver) connects
+        Send the jsonObject (which contains EVERYTHING)
+        close connection
+         */
+
+        int port = 7777;
+        try {
+            ServerSocket serverSocket = new ServerSocket(port);
+            System.out.println("Server socket open, awaiting connections");
+            Socket socket = serverSocket.accept();
+            DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+
+
+            //writes output but also removes the escape slashes that occur during toString()
+            //output.writeUTF(jsonObject.toString().replace("\\", ""));
+            output.writeUTF(jsonObject.toString());
+
+            output.close();
+            serverSocket.close();
+            System.out.println("Server connection closing...");
+        } catch (IOException e) {
+            System.out.println("Unable to create new ServerSocket");
+            e.printStackTrace();
+        }
+
     }
 
     public String toString() {
         return visualizer.toString();
+    }
+
+    public JsonObject getJsonObject() {
+        return jsonObject;
     }
 }

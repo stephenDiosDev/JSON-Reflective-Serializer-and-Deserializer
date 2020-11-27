@@ -10,7 +10,9 @@ package program;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-
+import java.util.Arrays;
+import java.util.Objects;
+//TODO clean up the toString outputs for these for more clarity
 /**
  * A class with only primitives as its instance variables
   */
@@ -29,6 +31,13 @@ class AllPrimitive {
         setA(i);
         setB(j);
         setC(k);
+    }
+
+    //copy constructor
+    AllPrimitive(AllPrimitive object) {
+        setA(object.getA());
+        setB(object.getB());
+        setC(object.isC());
     }
 
     public int getA() {
@@ -56,7 +65,8 @@ class AllPrimitive {
     }
 
     public String toString() {
-        String result = "\n[a: " + Integer.toString(getA()) + "] [b: " + Double.toString(getB()) + "] [c: " + Boolean.toString(isC()) + "]";
+        String result = "\n[AllPrimitives (Object1)]\n" + "\t" +
+                "[a: " + Integer.toString(getA()) + "] [b: " + Double.toString(getB()) + "] [c: " + Boolean.toString(isC()) + "]";
         return result;
     }
 }
@@ -77,9 +87,15 @@ class ComplexWithReferences {
     }
 
     public ComplexWithReferences(AllPrimitive obj1, AllPrimitive obj2, ArrayPrimitives arr1) {
-        this.setObj1(obj1);
-        this.setObj2(obj2);
-        this.setArr1(arr1);
+        this.setObj1(new AllPrimitive(obj1));
+        this.setObj2(new AllPrimitive(obj2));
+        this.setArr1(new ArrayPrimitives(arr1));
+    }
+
+    public ComplexWithReferences(ComplexWithReferences object) {
+        this.setObj1(new AllPrimitive(object.getObj1()));
+        this.setObj2(new AllPrimitive(object.getObj2()));
+        this.setArr1(new ArrayPrimitives(object.getArr1()));
     }
 
     public AllPrimitive getObj1() {
@@ -107,7 +123,10 @@ class ComplexWithReferences {
     }
 
     public String toString() {
-        String result = getObj1().toString() + "\n" + getObj2().toString() + "\n" + getArr1().toString();
+        String result = "\n[Complex With References (Object2)]\n" +
+                "\t" + getObj1().toString() + "\n" +
+                "\t" + getObj2().toString() + "\n" +
+                "\t" + getArr1().toString();
         return result;
     }
 }
@@ -126,6 +145,11 @@ class ArrayPrimitives {
         setMyArr(input);
     }
 
+    //copy constructor
+    public ArrayPrimitives(ArrayPrimitives object) {
+        setMyArr(object.getMyArr());
+    }
+
     public int[] getMyArr() {
         return myArr;
     }
@@ -138,10 +162,13 @@ class ArrayPrimitives {
     }
 
     public String toString() {
-        String result = "\n";
+        String result = "\n[Array of Primitives (Object3)]\n";
+
+        if(myArr.length == 0)
+            return "\t" + "No elements";
 
         for(int i = 0; i < myArr.length; i++) {
-            result += "[Index: " + i + "]: " + Integer.toString(myArr[i]) + "\n";
+            result += "\t" + "[Index: " + i + "]: " + Integer.toString(myArr[i]) + "\n";
         }
 
         return result;
@@ -159,6 +186,10 @@ class ArrayReferences {
         setMyArr(inputArr);
     }
 
+    public ArrayReferences(ArrayReferences object) {
+        this.setMyArr(object.getMyArr());
+    }
+
     public Object[] getMyArr() {
         return myArr;
     }
@@ -168,28 +199,38 @@ class ArrayReferences {
     }
 
     public String toString() {
-        String result = "\n";
+        String result = "\n[Array of References (Object4)]\n";
+
+        /*
+        The following if statement that checks if an array contains all null values
+        was taken from the following link under "Check Array Null Using Java 8"
+        https://www.delftstack.com/howto/java/how-to-check-whether-an-array-is-null-empty/#check-array-null-using-java-8
+         */
+        //checks if the entire array is null values
+        if(Arrays.stream(getMyArr()).allMatch(Objects::isNull))
+            return "\tAll elements null";
 
         for(int i = 0; i < myArr.length; i++) {
+            result += "\t" + "[Index: " + i + "]: ";
             if(myArr[i] instanceof AllPrimitive) {
                 AllPrimitive a = (AllPrimitive) myArr[i];
-                result += a.toString() + "\n";
+                result += "\t" + a.toString() + "\n";
             }
             else if(myArr[i] instanceof ComplexWithReferences) {
                 ComplexWithReferences a = (ComplexWithReferences) myArr[i];
-                result += a.toString() + "\n";
+                result += "\t" + a.toString() + "\n";
             }
             else if(myArr[i] instanceof ArrayPrimitives) {
                 ArrayPrimitives a = (ArrayPrimitives) myArr[i];
-                result += a.toString() + "\n";
+                result += "\t" + a.toString() + "\n";
             }
             else if(myArr[i] instanceof ArrayReferences) {
                 ArrayReferences a = (ArrayReferences) myArr[i];
-                result += a.toString() + "\n";
+                result += "\t" + a.toString() + "\n";
             }
             else if(myArr[i] instanceof InstanceJavaCollection) {
                 InstanceJavaCollection a = (InstanceJavaCollection) myArr[i];
-                result += a.toString() + "\n";
+                result += "\t" + a.toString() + "\n";
             }
         }
 
@@ -198,7 +239,7 @@ class ArrayReferences {
 }
 
 class InstanceJavaCollection {
-    private ArrayList<Object> list;
+    private ArrayList<Object> list = new ArrayList<>();
 
     private AllPrimitive a;
     private AllPrimitive b;
@@ -227,6 +268,14 @@ class InstanceJavaCollection {
         list.add(b);
         list.add(c);
         list.add(arr);
+    }
+
+    public InstanceJavaCollection (InstanceJavaCollection object) {
+        setA(object.getA());
+        setB(object.getB());
+        setC(object.getC());
+        setArr(object.getArr());
+        setList(object.getList());
     }
 
     public AllPrimitive getA() {
@@ -270,10 +319,18 @@ class InstanceJavaCollection {
     }
 
     public String toString() {
-        String result = "";
+        String result = "\n[Instance Java Collection (Object5)]\n";
+
+        /*
+        The following if statement that checks if a list contains all null values
+        was adapted from the following link under "Check Array Null Using Java 8"
+        https://www.delftstack.com/howto/java/how-to-check-whether-an-array-is-null-empty/#check-array-null-using-java-8
+         */
+        if(list.stream().allMatch(Objects::isNull))
+            return "\t" + "All list elements null";
         for(Object ob : list) {
             if(ob instanceof AllPrimitive || ob instanceof ArrayPrimitives)
-                result += ob.toString() + "\n";
+                result += "\t" + ob.toString() + "\n";
         }
         return result;
     }

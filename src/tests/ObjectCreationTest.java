@@ -4,10 +4,6 @@ import program.Sender;
 import org.junit.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.io.StringBufferInputStream;
-import java.util.Scanner;
 
 import static org.junit.Assert.*;
 
@@ -26,7 +22,9 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[a: 22] [b: 69.9] [c: true]\n", send.toString());
+        assertEquals("\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 22] [b: 69.9] [c: true]\n", send.toString());
     }
 
     @Test
@@ -40,10 +38,18 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[a: 22] [b: 69.9] [c: true]\n" +
-                "\n[a: 13] [b: 102.76] [c: false]\n" +
-                "\n[a: -2076] [b: -2.76] [c: false]\n" +
-                "\n[a: 0] [b: 0.0] [c: true]\n", send.toString());
+        assertEquals("\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 22] [b: 69.9] [c: true]\n" +
+                "\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 13] [b: 102.76] [c: false]\n" +
+                "\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: -2076] [b: -2.76] [c: false]\n" +
+                "\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 0] [b: 0.0] [c: true]\n", send.toString());
     }
 
     @Test
@@ -55,8 +61,17 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[Index: 0]: 0\n" + "[Index: 1]: 1\n" + "[Index: 2]: 2\n" + "[Index: 3]: 3\n" +
-                "[Index: 4]: 4\n" + "[Index: 5]: 5\n" + "[Index: 6]: 6\n" + "[Index: 7]: 7\n\n", send.toString());
+        assertEquals("\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 0\n" +
+                "\t[Index: 1]: 1\n" +
+                "\t[Index: 2]: 2\n" +
+                "\t[Index: 3]: 3\n" +
+                "\t[Index: 4]: 4\n" +
+                "\t[Index: 5]: 5\n" +
+                "\t[Index: 6]: 6\n" +
+                "\t[Index: 7]: 7\n" +
+                "\n", send.toString());
     }
 
     @Test
@@ -69,9 +84,25 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[Index: 0]: 0\n" + "[Index: 1]: 1\n" + "[Index: 2]: 2\n" + "[Index: 3]: 3\n" +
-                "[Index: 4]: 4\n" + "[Index: 5]: 5\n" + "[Index: 6]: 6\n" + "[Index: 7]: 7\n\n" + "\n[Index: 0]: 12\n\n"
-                + "\n[Index: 0]: 99\n" + "[Index: 1]: 95\n" + "[Index: 2]: 54\n\n", send.toString());
+        assertEquals("\n[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 0\n" +
+                "\t[Index: 1]: 1\n" +
+                "\t[Index: 2]: 2\n" +
+                "\t[Index: 3]: 3\n" +
+                "\t[Index: 4]: 4\n" +
+                "\t[Index: 5]: 5\n" +
+                "\t[Index: 6]: 6\n" +
+                "\t[Index: 7]: 7\n" +
+                "\n" +
+                "\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 12\n" +
+                "\n" +
+                "\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 99\n" +
+                "\t[Index: 1]: 95\n" +
+                "\t[Index: 2]: 54\n\n", send.toString());
     }
 
     @Test
@@ -83,9 +114,21 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[a: 12] [b: 22.2] [c: true]\n" +
-                        "\n[a: 69] [b: 102.54] [c: false]\n" +
-                        "\n[Index: 0]: 23\n" + "[Index: 1]: 24\n" + "[Index: 2]: 87\n" + "[Index: 3]: 10000\n\n",
+        assertEquals("\n" +
+                        "[Complex With References (Object2)]\n" +
+                        "\t\n" +
+                        "[AllPrimitives (Object1)]\n" +
+                        "\t[a: 12] [b: 22.2] [c: true]\n" +
+                        "\t\n" +
+                        "[AllPrimitives (Object1)]\n" +
+                        "\t[a: 69] [b: 102.54] [c: false]\n" +
+                        "\t\n" +
+                        "[Array of Primitives (Object3)]\n" +
+                        "\t[Index: 0]: 23\n" +
+                        "\t[Index: 1]: 24\n" +
+                        "\t[Index: 2]: 87\n" +
+                        "\t[Index: 3]: 10000\n" +
+                        "\n",
                         send.toString());
     }
 
@@ -102,12 +145,32 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[a: 1] [b: 2.2] [c: true]\n" +
-                    "\n[a: 100] [b: 202.22] [c: true]\n" +
-                    "\n[Index: 0]: 99" + "\n[Index: 1]: 100001" + "\n[Index: 2]: 101\n\n" +
-                    "\n[a: -11] [b: -4.2] [c: false]\n" +
-                    "\n[a: -60] [b: -902.22] [c: true]\n" +
-                    "\n[Index: 0]: 1010\n\n", send.toString());
+        assertEquals("\n" +
+                "[Complex With References (Object2)]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 1] [b: 2.2] [c: true]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 100] [b: 202.22] [c: true]\n" +
+                "\t\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 99\n" +
+                "\t[Index: 1]: 100001\n" +
+                "\t[Index: 2]: 101\n" +
+                "\n" +
+                "\n" +
+                "[Complex With References (Object2)]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: -11] [b: -4.2] [c: false]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: -60] [b: -902.22] [c: true]\n" +
+                "\t\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 1010\n" +
+                "\n", send.toString());
     }
 
     @Test
@@ -123,12 +186,36 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n\n[a: 1] [b: -2.02] [c: false]\n" +
-                            "\n[a: -65] [b: 300.1] [c: false]\n\n" +
-                            "[Index: 0]: 1\n" + "[Index: 1]: 2\n" + "[Index: 2]: 3\n\n" +
-                            "\n[a: 12] [b: 22.2] [c: true]\n" +
-                            "\n[a: 69] [b: 102.54] [c: false]\n" +
-                            "\n[Index: 0]: 23\n" + "[Index: 1]: 24\n" + "[Index: 2]: 87\n" + "[Index: 3]: 10000\n\n\n",
+        assertEquals("\n" +
+                        "[Array of References (Object4)]\n" +
+                        "\t[Index: 0]: \t\n" +
+                        "[AllPrimitives (Object1)]\n" +
+                        "\t[a: 1] [b: -2.02] [c: false]\n" +
+                        "\t[Index: 1]: \t\n" +
+                        "[AllPrimitives (Object1)]\n" +
+                        "\t[a: -65] [b: 300.1] [c: false]\n" +
+                        "\t[Index: 2]: \t\n" +
+                        "[Array of Primitives (Object3)]\n" +
+                        "\t[Index: 0]: 1\n" +
+                        "\t[Index: 1]: 2\n" +
+                        "\t[Index: 2]: 3\n" +
+                        "\n" +
+                        "\t[Index: 3]: \t\n" +
+                        "[Complex With References (Object2)]\n" +
+                        "\t\n" +
+                        "[AllPrimitives (Object1)]\n" +
+                        "\t[a: 12] [b: 22.2] [c: true]\n" +
+                        "\t\n" +
+                        "[AllPrimitives (Object1)]\n" +
+                        "\t[a: 69] [b: 102.54] [c: false]\n" +
+                        "\t\n" +
+                        "[Array of Primitives (Object3)]\n" +
+                        "\t[Index: 0]: 23\n" +
+                        "\t[Index: 1]: 24\n" +
+                        "\t[Index: 2]: 87\n" +
+                        "\t[Index: 3]: 10000\n" +
+                        "\n" +
+                        "\n",
                             send.toString());
     }
 
@@ -143,9 +230,24 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n\n[a: 1] [b: -2.02] [c: false]\n" +
-                            "\n\n[a: -65] [b: 300.1] [c: false]\n\n" +
-                            "\n[Index: 0]: 1" + "\n[Index: 1]: 2" + "\n[Index: 2]: 3\n\n\n", send.toString());
+        assertEquals( "\n" +
+                "[Array of References (Object4)]\n" +
+                "\t[Index: 0]: \t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 1] [b: -2.02] [c: false]\n" +
+                "\t[Index: 1]: \t\n" +
+                "[Array of References (Object4)]\n" +
+                "\t[Index: 0]: \t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: -65] [b: 300.1] [c: false]\n" +
+                "\n" +
+                "\t[Index: 2]: \t\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 1\n" +
+                "\t[Index: 1]: 2\n" +
+                "\t[Index: 2]: 3\n" +
+                "\n" +
+                "\n", send.toString());
     }
 
     @Test
@@ -167,15 +269,54 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n\n[a: 1] [b: -2.02] [c: false]\n" +
-                "\n[a: -65] [b: 300.1] [c: false]\n\n" +
-                "[Index: 0]: 1\n" + "[Index: 1]: 2\n" + "[Index: 2]: 3\n\n" +
-                "\n[a: 12] [b: 22.2] [c: true]\n" +
-                "\n[a: 69] [b: 102.54] [c: false]\n" +
-                "\n[Index: 0]: 23\n" + "[Index: 1]: 24\n" + "[Index: 2]: 87\n" + "[Index: 3]: 10000\n\n\n" +
-                "\n\n[a: 1] [b: -2.02] [c: false]\n" +
-                "\n\n[a: -65] [b: 300.1] [c: false]\n\n" +
-                "\n[Index: 0]: 1" + "\n[Index: 1]: 2" + "\n[Index: 2]: 3\n\n\n", send.toString());
+        assertEquals("\n" +
+                "[Array of References (Object4)]\n" +
+                "\t[Index: 0]: \t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 1] [b: -2.02] [c: false]\n" +
+                "\t[Index: 1]: \t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: -65] [b: 300.1] [c: false]\n" +
+                "\t[Index: 2]: \t\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 1\n" +
+                "\t[Index: 1]: 2\n" +
+                "\t[Index: 2]: 3\n" +
+                "\n" +
+                "\t[Index: 3]: \t\n" +
+                "[Complex With References (Object2)]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 12] [b: 22.2] [c: true]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 69] [b: 102.54] [c: false]\n" +
+                "\t\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 23\n" +
+                "\t[Index: 1]: 24\n" +
+                "\t[Index: 2]: 87\n" +
+                "\t[Index: 3]: 10000\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "[Array of References (Object4)]\n" +
+                "\t[Index: 0]: \t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 1] [b: -2.02] [c: false]\n" +
+                "\t[Index: 1]: \t\n" +
+                "[Array of References (Object4)]\n" +
+                "\t[Index: 0]: \t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: -65] [b: 300.1] [c: false]\n" +
+                "\n" +
+                "\t[Index: 2]: \t\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 1\n" +
+                "\t[Index: 1]: 2\n" +
+                "\t[Index: 2]: 3\n" +
+                "\n" +
+                "\n", send.toString());
     }
 
     @Test
@@ -187,11 +328,25 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[a: 1] [b: 22.2] [c: false]\n" +
-                            "\n[a: 67] [b: 6.9] [c: false]\n" +
-                            "\n[a: 99] [b: 101.1] [c: true]\n" +
-                            "\n[Index: 0]: 1" + "\n[Index: 1]: 3" + "\n[Index: 2]: 5" +
-                            "\n[Index: 3]: 7\n\n\n", send.toString());
+        assertEquals("\n" +
+                "[Instance Java Collection (Object5)]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 1] [b: 22.2] [c: false]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 67] [b: 6.9] [c: false]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 99] [b: 101.1] [c: true]\n" +
+                "\t\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 1\n" +
+                "\t[Index: 1]: 3\n" +
+                "\t[Index: 2]: 5\n" +
+                "\t[Index: 3]: 7\n" +
+                "\n" +
+                "\n", send.toString());
     }
 
     @Test
@@ -208,15 +363,39 @@ public class ObjectCreationTest {
 
         send.driver();
 
-        assertEquals("\n[a: 1] [b: 22.2] [c: false]\n" +
-                "\n[a: 67] [b: 6.9] [c: false]\n" +
-                "\n[a: 99] [b: 101.1] [c: true]\n" +
-                "\n[Index: 0]: 1" + "\n[Index: 1]: 3" + "\n[Index: 2]: 5" +
-                "\n[Index: 3]: 7\n\n\n" +
-                "\n[a: 3] [b: 69.42] [c: true]\n" +
-                "\n[a: 6] [b: 4.2] [c: true]\n" +
-                "\n[a: 99] [b: 100.0] [c: false]\n" +
-                "\n[Index: 0]: 99\n\n\n", send.toString());
+        assertEquals("\n" +
+                "[Instance Java Collection (Object5)]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 1] [b: 22.2] [c: false]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 67] [b: 6.9] [c: false]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 99] [b: 101.1] [c: true]\n" +
+                "\t\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 1\n" +
+                "\t[Index: 1]: 3\n" +
+                "\t[Index: 2]: 5\n" +
+                "\t[Index: 3]: 7\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "[Instance Java Collection (Object5)]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 3] [b: 69.42] [c: true]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 6] [b: 4.2] [c: true]\n" +
+                "\t\n" +
+                "[AllPrimitives (Object1)]\n" +
+                "\t[a: 99] [b: 100.0] [c: false]\n" +
+                "\t\n" +
+                "[Array of Primitives (Object3)]\n" +
+                "\t[Index: 0]: 99\n\n\n", send.toString());
     }
 
     //reverts system.out to normal and allows us to access whats stored in baos

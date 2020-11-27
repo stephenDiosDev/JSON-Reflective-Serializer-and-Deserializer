@@ -8,10 +8,6 @@ import java.util.*;
 import javax.json.*;
 
 public class Serializer {
-    /* TODO
-    Create json object and store the object
-     */
-
     public static String serializeObject(Object source, IdentityHashMap hashMap, ArrayList<String> jsonStrings) {
         return jsonObject(source, hashMap, jsonStrings);
     }

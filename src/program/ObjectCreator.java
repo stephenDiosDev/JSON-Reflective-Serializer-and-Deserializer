@@ -86,15 +86,15 @@ class ComplexWithReferences {
     }
 
     public ComplexWithReferences(AllPrimitive obj1, AllPrimitive obj2, ArrayPrimitives arr1) {
-        this.setObj1(obj1);
-        this.setObj2(obj2);
-        this.setArr1(arr1);
+        this.setObj1(new AllPrimitive(obj1));
+        this.setObj2(new AllPrimitive(obj2));
+        this.setArr1(new ArrayPrimitives(arr1));
     }
 
     public ComplexWithReferences(ComplexWithReferences object) {
-        this.setObj1(object.getObj1());
-        this.setObj2(object.getObj2());
-        this.setArr1(object.getArr1());
+        this.setObj1(new AllPrimitive(object.getObj1()));
+        this.setObj2(new AllPrimitive(object.getObj2()));
+        this.setArr1(new ArrayPrimitives(object.getArr1()));
     }
 
     public AllPrimitive getObj1() {

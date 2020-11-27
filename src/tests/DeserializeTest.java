@@ -96,7 +96,15 @@ public class DeserializeTest {
         JsonObject jsonObject = sender.getJsonObject();
         deserializer.deserializeObject(jsonObject.toString());
 
-        assertEquals("\nIndex [0]: null" +
+        assertEquals("\nIndex [0]: [a: 5] [b: 1.24] [c: false]\n" +
+                "[a: 5] [b: 1.24] [c: false]\n" +
+                "\n" +
+                "[Index: 0]: 1\n" +
+                "[Index: 1]: 2\n" +
+                "[Index: 2]: 3\n" +
+                "[Index: 3]: 4\n" +
+                "[Index: 4]: 5\n" +
+                "[Index: 5]: 6\n" +
                 "\nIndex [1]: [a: 12] [b: 22.2] [c: true]" +
                 "\nIndex [2]: [a: 69] [b: 102.54] [c: false]" +
                 "\nIndex [3]: No elements" +
@@ -118,12 +126,28 @@ public class DeserializeTest {
         JsonObject jsonObject = sender.getJsonObject();
         deserializer.deserializeObject(jsonObject.toString());
 
-        assertEquals("\nIndex [0]: null" +
+        assertEquals("\nIndex [0]: [a: 5] [b: 1.24] [c: false]\n" +
+                "[a: 5] [b: 1.24] [c: false]\n" +
+                "\n" +
+                "[Index: 0]: 1\n" +
+                "[Index: 1]: 2\n" +
+                "[Index: 2]: 3\n" +
+                "[Index: 3]: 4\n" +
+                "[Index: 4]: 5\n" +
+                "[Index: 5]: 6\n" +
                 "\nIndex [1]: [a: 1] [b: 2.2] [c: true]" +
                 "\nIndex [2]: [a: 100] [b: 202.22] [c: true]" +
                 "\nIndex [3]: No elements" +
                 "\nIndex [4]: [99, 100001, 101]" +
-                "\nIndex [5]: null" +
+                "\nIndex [5]: [a: 5] [b: 1.24] [c: false]\n" +
+                "[a: 5] [b: 1.24] [c: false]\n" +
+                "\n" +
+                "[Index: 0]: 1\n" +
+                "[Index: 1]: 2\n" +
+                "[Index: 2]: 3\n" +
+                "[Index: 3]: 4\n" +
+                "[Index: 4]: 5\n" +
+                "[Index: 5]: 6\n" +
                 "\nIndex [6]: [a: -11] [b: -4.2] [c: false]" +
                 "\nIndex [7]: [a: -60] [b: -902.22] [c: true]" +
                 "\nIndex [8]: No elements" +
@@ -149,7 +173,15 @@ public class DeserializeTest {
                 "\nIndex [3]: [a: -65] [b: 300.1] [c: false]" +
                 "\nIndex [4]: No elements" +
                 "\nIndex [5]: [1, 2, 3]" +
-                "\nIndex [6]: null" +
+                "\nIndex [6]: [a: 5] [b: 1.24] [c: false]\n" +
+                "[a: 5] [b: 1.24] [c: false]\n" +
+                "\n" +
+                "[Index: 0]: 1\n" +
+                "[Index: 1]: 2\n" +
+                "[Index: 2]: 3\n" +
+                "[Index: 3]: 4\n" +
+                "[Index: 4]: 5\n" +
+                "[Index: 5]: 6\n" +
                 "\nIndex [7]: [a: 12] [b: 22.2] [c: true]" +
                 "\nIndex [8]: [a: 69] [b: 102.54] [c: false]" +
                 "\nIndex [9]: No elements" +
@@ -182,7 +214,15 @@ public class DeserializeTest {
                 "\nIndex [3]: [a: -65] [b: 300.1] [c: false]" +
                 "\nIndex [4]: No elements" +
                 "\nIndex [5]: [1, 2, 3]" +
-                "\nIndex [6]: null" +
+                "\nIndex [6]: [a: 5] [b: 1.24] [c: false]\n" +
+                "[a: 5] [b: 1.24] [c: false]\n" +
+                "\n" +
+                "[Index: 0]: 1\n" +
+                "[Index: 1]: 2\n" +
+                "[Index: 2]: 3\n" +
+                "[Index: 3]: 4\n" +
+                "[Index: 4]: 5\n" +
+                "[Index: 5]: 6\n" +
                 "\nIndex [7]: [a: 12] [b: 22.2] [c: true]" +
                 "\nIndex [8]: [a: 69] [b: 102.54] [c: false]" +
                 "\nIndex [9]: No elements" +

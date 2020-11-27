@@ -36,7 +36,7 @@ public class Deserializer {
             jsonObject = jsonReader.readObject();
 
             //detailed jsonObject printout
-            System.out.println(jsonObject.toString().replace("\\", ""));
+            //System.out.println(jsonObject.toString().replace("\\", ""));
 
             int id = jsonObject.getInt("id");
             //System.out.println("Object ID: " + id);
@@ -178,7 +178,7 @@ public class Deserializer {
         className = className.replace("program.", "");
 
 
-        //System.out.println(jsonObject.toString().replace("\\", ""));
+        System.out.println(jsonObject.toString().replace("\\", ""));
         JsonArray fields = null;
         if(!className.equals("[I"))
             fields = jsonObject.getJsonArray("fields");
@@ -192,7 +192,7 @@ public class Deserializer {
         else if(className.matches("ArrayReferences")) { //object 4
             result = new ArrayReferences(deserializeJsonArrayReferences(fields));
         }
-        else if(className.matches("ComplexWithReference")) {    //object 2
+        else if(className.matches("ComplexWithReferences")) {    //object 2
             result = new ComplexWithReferences(deserializeJsonComplexWithReferences());
         }
         else if(className.matches("InstanceJavaCollection")) {  //object 5

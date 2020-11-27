@@ -232,8 +232,6 @@ public class Visualizer {
             System.out.println(tabs + "CLASS");
             System.out.println(tabs + "Class: " + c.getName());
 
-            //System.out.println(tabs + "HASHCODE");
-            //System.out.println(tabs + "HashCode: " + obj.hashCode());
 
             System.out.print(tabs + "SUPERCLASS -> ");
             if(c.getSuperclass() != null) { //superclass found
@@ -283,18 +281,15 @@ public class Visualizer {
         System.out.println(tabs + "FIELDS ( " + c.getName() + " )");
         Field[] fields = c.getDeclaredFields();
         System.out.print(tabs + "Fields -> ");
+
         if(fields.length > 0) { //fields found
             System.out.println();
             for(Field field : fields) {
                 field.setAccessible(true);
+
                 System.out.println(tabs + " FIELD");
                 System.out.println(tabs + "  Name: " + field.getName());
 
-                try {
-                    //System.out.println(tabs + "  HashCode: " + field.get(obj).hashCode());
-                } catch (Exception e) {
-
-                }
 
                 System.out.println(tabs + "  Type: " + field.getType());
                 System.out.println(tabs + "  Modifiers: " + Modifier.toString(field.getModifiers()));
@@ -318,7 +313,7 @@ public class Visualizer {
                                 for(Object ob : arrayContents) {
                                     System.out.print(tabs + "   Value: ");
                                     try {
-                                        System.out.println(ob.getClass().getName() + "@" + field.hashCode());
+                                        System.out.println(ob.getClass().getName());// + "@" + field.hashCode());
                                     } catch (NullPointerException e) {
                                         System.out.println("null");
                                     }

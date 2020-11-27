@@ -78,38 +78,29 @@ public class Deserializer {
             jsonObject = jsonReader.readObject();
 
             int id = jsonObject.getInt("id");
-            JsonArray fieldEntries;
+            JsonArray fieldEntries = null;
 
             if(jsonObject.getString("type").equals("object")) {
                 //System.out.println("[ID: " + id + "] [Type (Object): " + jsonObject.getString("type") + "]");
                 fieldEntries = jsonObject.getJsonArray("fields");
-                //System.out.println("Fields: " + fieldEntries.toString());
-                for(int j = 0; j < fieldEntries.size(); j++) {
-                    JsonObject singleFieldEntry = fieldEntries.getJsonObject(j);
-                    if(singleFieldEntry.containsKey("reference")) {
-                        //System.out.println("[ID: " + id + "] contains a reference!");
-                        Integer referenceValue = singleFieldEntry.getInt("reference");
-                        //System.out.println("[ID: " + id + "] contains [Reference: " + referenceValue + "]!");
-                        references.get(id).add(referenceValue);
-                    }
-                }
             }
             else if (jsonObject.getString("type").equals("array")) {
                 //System.out.println("[ID: " + id + "] [Type (Array): " + jsonObject.getString("type") + "]");
                 fieldEntries = jsonObject.getJsonArray("entries");
-                for(int j = 0; j < fieldEntries.size(); j++) {
-                    JsonObject singleFieldEntry = fieldEntries.getJsonObject(j);
-                    if(singleFieldEntry.containsKey("reference")) {
-                        //System.out.println("[ID: " + id + "] contains a reference!");
-                        Integer referenceValue;
-                        try {
-                            referenceValue = Integer.parseInt(String.valueOf(singleFieldEntry.get("reference")));
-                        } catch (NumberFormatException e) {
-                            referenceValue = -1;
-                        }
-                        //System.out.println("[ID: " + id + "] contains [Reference: " + referenceValue + "]!");
-                        references.get(id).add(referenceValue);
+            }
+
+            for(int j = 0; j < fieldEntries.size(); j++) {
+                JsonObject singleFieldEntry = fieldEntries.getJsonObject(j);
+                if(singleFieldEntry.containsKey("reference")) {
+                    //System.out.println("[ID: " + id + "] contains a reference!");
+                    Integer referenceValue;
+                    try {
+                        referenceValue = Integer.parseInt(String.valueOf(singleFieldEntry.get("reference")));
+                    } catch (NumberFormatException e) {
+                        referenceValue = -1;
                     }
+                    //System.out.println("[ID: " + id + "] contains [Reference: " + referenceValue + "]!");
+                    references.get(id).add(referenceValue);
                 }
             }
         }

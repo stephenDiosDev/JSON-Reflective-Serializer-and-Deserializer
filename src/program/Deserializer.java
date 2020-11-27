@@ -1,9 +1,6 @@
 package program;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
+import javax.json.*;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,8 +23,8 @@ public class Deserializer {
         JsonArray objectArray = jsonObject.getJsonArray("objects");
 
         //debug prints
-        System.out.println(objectArray.toString().replace("\\", ""));
-        System.out.println("Size of object array: " + objectArray.size());
+        //System.out.println(objectArray.toString().replace("\\", ""));
+        //System.out.println("Size of object array: " + objectArray.size());
 
         //the object ID is the index in this array for that object
         //Ex: object with ID = 0 is at index 0
@@ -37,7 +34,9 @@ public class Deserializer {
         for(int i = 0; i < objectArray.size(); i++) {
             jsonReader = Json.createReader(new StringReader(objectArray.getString(i)));
             jsonObject = jsonReader.readObject();
-            //System.out.println(jsonObject.toString().replace("\\", ""));
+
+            //detailed jsonObject printout
+            System.out.println(jsonObject.toString().replace("\\", ""));
 
             int id = jsonObject.getInt("id");
             //System.out.println("Object ID: " + id);
@@ -46,11 +45,16 @@ public class Deserializer {
         }
 
         //debug
-        //for(Object obj : createdObjects)
-            //System.out.println(obj.toString());
+/*        for(Object obj : createdObjects) {
+            if(obj == null)
+                System.out.println("Object is null");
+            else
+                System.out.println(obj.toString());
+        }
+//*/
 
         //debug
-        System.out.println(getArrayListPrintOut());
+        //System.out.println(getArrayListPrintOut());
 
         connectReferences(objectArray);
 
@@ -64,43 +68,62 @@ public class Deserializer {
         ArrayList<ArrayList<Integer>> references = new ArrayList<>();     //[ID][references for that ID]
         JsonReader jsonReader;
         JsonObject jsonObject;
-        for(int i = 0; i < createdObjects.length; i++) {
-            int ID = i;
-            references.add(new ArrayList<Integer>());
 
-            for(int j = 0; j < jsonArray.size(); j++) {
-                //grabs the {"class":...} string
-                jsonReader = Json.createReader(new StringReader(jsonArray.getString(i)));
-                jsonObject = jsonReader.readObject();
-
-                //find the ID in the jsonArray so we can read any references
-                if(ID == jsonObject.getInt("id")) {
-                    //now we must figure out if this is an object or array
-                    if(jsonObject.getString("type").equals("object")) { //have fields
-                        JsonArray fields = jsonObject.getJsonArray("fields");
-                        //go through all fields and find any references
-                        for(int k = 0; k < fields.size(); k++) {
-                            if(fields.getJsonObject(k).containsKey("reference")) {
-                                int fieldID = fields.getJsonObject(k).getInt("reference");
-                                if (!checkForDuplicates(references.get(ID), fieldID))   //bug in this, redo TODO
-                                    references.get(ID).add(fields.getJsonObject(k).getInt("reference"));
-                            }
-                        }
-                    }
-                    else if(jsonObject.getString("type").equals("array")) { //have entries
-
-                    }
-
-
-                }
-                //once ID is found, it will either have a reference block or it wont IN THE FIELDS/ENTRIES
-                    //if the field has a value; skip. If the field has a null reference; set -2 in the references
-                    //if the field has a non null reference; do references.get(i).add(reference number)
-            }
-            for(int g = 0; g < references.get(ID).size(); g++)
-                System.out.println("[ID: " + ID + "] has [Reference: " + references.get(ID).get(g) + "]");
+        for(int i = 0; i < jsonArray.size(); i++) {
+            references.add(new ArrayList<>());
         }
 
+        for(int i = 0; i < jsonArray.size(); i++) {
+            jsonReader = Json.createReader(new StringReader(jsonArray.getString(i)));
+            jsonObject = jsonReader.readObject();
+
+            int id = jsonObject.getInt("id");
+            JsonArray fieldEntries;
+
+            if(jsonObject.getString("type").equals("object")) {
+                //System.out.println("[ID: " + id + "] [Type (Object): " + jsonObject.getString("type") + "]");
+                fieldEntries = jsonObject.getJsonArray("fields");
+                //System.out.println("Fields: " + fieldEntries.toString());
+                for(int j = 0; j < fieldEntries.size(); j++) {
+                    JsonObject singleFieldEntry = fieldEntries.getJsonObject(j);
+                    if(singleFieldEntry.containsKey("reference")) {
+                        //System.out.println("[ID: " + id + "] contains a reference!");
+                        Integer referenceValue = singleFieldEntry.getInt("reference");
+                        //System.out.println("[ID: " + id + "] contains [Reference: " + referenceValue + "]!");
+                        references.get(id).add(referenceValue);
+                    }
+                }
+            }
+            else if (jsonObject.getString("type").equals("array")) {
+                //System.out.println("[ID: " + id + "] [Type (Array): " + jsonObject.getString("type") + "]");
+                fieldEntries = jsonObject.getJsonArray("entries");
+                for(int j = 0; j < fieldEntries.size(); j++) {
+                    JsonObject singleFieldEntry = fieldEntries.getJsonObject(j);
+                    if(singleFieldEntry.containsKey("reference")) {
+                        //System.out.println("[ID: " + id + "] contains a reference!");
+                        Integer referenceValue;
+                        try {
+                            referenceValue = Integer.parseInt(String.valueOf(singleFieldEntry.get("reference")));
+                        } catch (NumberFormatException e) {
+                            referenceValue = -1;
+                        }
+                        //System.out.println("[ID: " + id + "] contains [Reference: " + referenceValue + "]!");
+                        references.get(id).add(referenceValue);
+                    }
+                }
+            }
+        }
+        //debugConnectedPrintout(references);
+
+    }
+
+    public static void debugConnectedPrintout(ArrayList<ArrayList<Integer>> references) {
+        System.out.println("PRINTING REFERENCES LIST DEBUG:\n");
+        for(int ID = 0; ID < references.size(); ID++) {
+            for(Integer ref : references.get(ID)) {
+                System.out.println("[ID: " + ID + "] has [Reference: " + ref + "]");
+            }
+        }
     }
 
     /**

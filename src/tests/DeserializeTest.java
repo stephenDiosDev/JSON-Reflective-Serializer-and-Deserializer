@@ -283,7 +283,7 @@ public class DeserializeTest {
                 "[Index: 6]: 17\n" +
                 "[Index: 7]: 19\n" +
                 "\n" +
-                "\nIndex [1]: null" +
+                "\nIndex [1]: []" +
                 "\nIndex [2]: null" +
                 "\nIndex [3]: null" +
                 "\nIndex [4]: null" +
@@ -327,7 +327,7 @@ public class DeserializeTest {
                 "[Index: 5]: 13\n" +
                 "[Index: 6]: 17\n" +
                 "[Index: 7]: 19\n\n" +
-                "\nIndex [1]: null" +
+                "\nIndex [1]: []" +
                 "\nIndex [2]: null" +
                 "\nIndex [3]: null" +
                 "\nIndex [4]: null" +
@@ -353,7 +353,7 @@ public class DeserializeTest {
                 "[Index: 5]: 13\n" +
                 "[Index: 6]: 17\n" +
                 "[Index: 7]: 19\n\n" +
-                "\nIndex [16]: null" +
+                "\nIndex [16]: []" +
                 "\nIndex [17]: null" +
                 "\nIndex [18]: null" +
                 "\nIndex [19]: null" +

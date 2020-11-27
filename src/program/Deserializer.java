@@ -69,9 +69,29 @@ public class Deserializer {
 
         for(int i = 0; i < allObjects.length; i++) {
             if(allObjects[i] != null) {
+                String className = allObjects[i].getClass().getSimpleName();
                 System.out.println(allObjects[i].getClass().getSimpleName());
+                //variable order in object is order of references in references arraylist
+                if(className.equals("ArrayPrimitives")) {
+
+                }
+                else if(className.equals("ArrayReferences")) {
+
+                }
+                else if(className.equals("ComplexWithReferences")) {
+
+                }
+                else if(className.equals("InstanceJavaCollection")) {
+
+                }
+                else if(className.equals("int[]")) {
+
+                }
+                else if(className.equals("ArrayList")) {
+                    
+                }
             }
-            else {
+            else {  //caused by elements of ArrayList
                 System.out.println("null class");
             }
         }
@@ -201,6 +221,10 @@ public class Deserializer {
         else if(className.equals("[I")) {   //int array
             JsonArray entries = jsonObject.getJsonArray("entries");
             result = deserializeJsonIntArray(entries);
+        }
+        else if(className.equals("java.util.ArrayList")) {
+            //might have to do something fancy for this, maybe not TODO
+            result = new ArrayList<>();
         }
         return result;
     }

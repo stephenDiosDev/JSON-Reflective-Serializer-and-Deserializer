@@ -4,6 +4,7 @@ import javax.json.*;
 import java.io.DataInputStream;
 import java.io.StringReader;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Receiver extends Thread{
     private String serverInput;
@@ -42,7 +43,8 @@ public class Receiver extends Thread{
         }
 
         //finished receiving the json string
-        Deserializer.deserializeObject(serverInput);
-
+        ArrayList<Object> objectList = Deserializer.deserializeObject(serverInput);
+        System.out.println("Printing visualizer output below...\n");
+        Visualizer.printDeserializerOutput(objectList);
     }
 }

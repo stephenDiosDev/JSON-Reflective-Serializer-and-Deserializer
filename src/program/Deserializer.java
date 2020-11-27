@@ -2,10 +2,8 @@ package program;
 
 import javax.json.*;
 import java.io.StringReader;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.IdentityHashMap;
 
 public class Deserializer {
     private static Object[] createdObjects;

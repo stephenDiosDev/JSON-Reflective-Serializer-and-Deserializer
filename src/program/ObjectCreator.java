@@ -207,6 +207,7 @@ class ArrayReferences {
             return "All elements null";
 
         for(int i = 0; i < myArr.length; i++) {
+            result += "[Index: " + i + "]: ";
             if(myArr[i] instanceof AllPrimitive) {
                 AllPrimitive a = (AllPrimitive) myArr[i];
                 result += a.toString() + "\n";

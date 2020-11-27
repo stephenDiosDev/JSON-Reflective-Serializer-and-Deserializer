@@ -70,11 +70,10 @@ public class Deserializer {
         for(int i = 0; i < allObjects.length; i++) {
             if(allObjects[i] != null) {
                 String className = allObjects[i].getClass().getSimpleName();
-                
+
                 //ArrayList is [ID][reference value]
                 if(className.equals("ArrayPrimitives")) {
                     int referenceIndex = references.get(i).get(0);  //we know it will only have 1 reference
-                    //((ArrayPrimitives)allObjects[i]).setMyArr((int[])allObjects[referenceIndex]);
                     ((ArrayPrimitives)allObjects[i]).setMyArr((int[])stitchReferences(referenceIndex, references));
                     result.add(allObjects[i]);
                 }
@@ -85,6 +84,13 @@ public class Deserializer {
                     result.add(allObjects[i]);
                 }
                 else if(className.equals("ComplexWithReferences")) {
+                    int obj1RefID = references.get(i).get(0);
+                    int obj2RefID = references.get(i).get(1);
+                    int arr1RefID = references.get(i).get(2);
+
+                    ((ComplexWithReferences)allObjects[i]).setObj1((AllPrimitive) stitchReferences(obj1RefID, references));
+                    ((ComplexWithReferences)allObjects[i]).setObj2((AllPrimitive) stitchReferences(obj2RefID, references));
+                    ((ComplexWithReferences)allObjects[i]).setArr1((ArrayPrimitives) stitchReferences(arr1RefID, references));
 
                     result.add(allObjects[i]);
                 }
@@ -96,11 +102,6 @@ public class Deserializer {
                     //since it only holds primitives, we don't need to connect any references
                     result.add(allObjects[i]);
                 }
-                else if(className.equals("ArrayList")) {
-
-                }
-
-
             }
             else {  //caused by elements of ArrayList
                 System.out.println("null class");
@@ -122,7 +123,44 @@ public class Deserializer {
      * @return
      */
     private static Object stitchReferences(int id, ArrayList<ArrayList<Integer>> references) {
+        String className = createdObjects[id].getClass().getSimpleName();
 
+        if(className.equals("ArrayPrimitives")) {   //only has int[]
+            int referenceID = references.get(id).get(0);
+            ((ArrayPrimitives)createdObjects[id]).setMyArr((int[])createdObjects[referenceID]);
+        }
+        else if(className.equals("ArrayReferences")) {  //only Object[]
+            int referenceID = references.get(id).get(0);
+            ((ArrayReferences)createdObjects[id]).setMyArr((Object[])stitchReferences(referenceID, references));
+        }
+        else if(className.equals("ComplexWithReferences")) {    //AllPrimitive obj1, AllPrimitive obj2, ArrayPrimitive arr1
+            int obj1RefID = references.get(id).get(0);
+            int obj2RefID = references.get(id).get(1);
+            int arr1RefID = references.get(id).get(2);
+
+            ((AllPrimitive)createdObjects[id]).setA((int)stitchReferences(obj1RefID, references));
+            ((AllPrimitive)createdObjects[id]).setB((double)stitchReferences(obj2RefID, references));
+            ((ArrayPrimitives)createdObjects[id]).setMyArr((int[])stitchReferences(arr1RefID, references));
+        }
+        else if(className.equals("InstanceJavaCollection")) {
+            /*
+            ArrayList<Object> list
+            AllPrimitive a
+            AllPrimitive b
+            AllPrimitive c
+            ArrayPrimitives arr
+             */
+        }
+        else if(className.equals("ArrayList")) {
+
+        }
+        else if(className.equals("Object[]")) {
+            ArrayList<Integer> referencesList = references.get(id);
+            for(int i = 0; i < referencesList.size(); i++) {
+                int referenceID = referencesList.get(i);
+                ((Object[])createdObjects[id])[i] = stitchReferences(referenceID, references);
+            }
+        }
 
         return createdObjects[id];
     }
@@ -250,6 +288,10 @@ public class Deserializer {
             JsonArray entries = jsonObject.getJsonArray("entries");
             result = deserializeJsonIntArray(entries);
         }
+        else if(className.equals("[Ljava.lang.Object;")) {
+            JsonArray entries = jsonObject.getJsonArray("entries");
+            result = deserializeJsonObjectArray(entries);
+        }
         else if(className.equals("java.util.ArrayList")) {
             //might have to do something fancy for this, maybe not TODO
             result = new ArrayList<>();
@@ -293,6 +335,14 @@ public class Deserializer {
         return result;
     }
 
+    private static Object[] deserializeJsonObjectArray(JsonArray array) {
+        Object[] result = new Object[array.size()];
+        for(int i = 0; i < result.length; i++) {
+            result [i] = new Object();
+        }
+        return result;
+    }
+
     private static ComplexWithReferences deserializeJsonComplexWithReferences () {
         ComplexWithReferences result = new ComplexWithReferences();
 
@@ -310,9 +360,11 @@ public class Deserializer {
         ArrayReferences result = null;
 
         Object[] objArr = new Object[jsonFields.size()];
+        System.out.println("OBJECT ARRAY IS SIZE: " + objArr.length);
 
-        for(Object obj : objArr)
-            obj = new Object();
+        for(int i = 0; i < objArr.length; i++) {
+            objArr[i] = new Object();
+        }
 
         result = new ArrayReferences(objArr);
         return result;

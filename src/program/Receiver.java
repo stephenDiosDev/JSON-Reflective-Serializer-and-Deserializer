@@ -3,6 +3,7 @@ package program;
 import javax.json.*;
 import java.io.DataInputStream;
 import java.io.StringReader;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ public class Receiver{
         try {
             Socket socket = new Socket(host, port);
             DataInputStream input = new DataInputStream(socket.getInputStream());
-            System.out.println("Client connected on separate thread! Waiting for data...");
+            System.out.println("Client connected! Waiting for data...");
 
             //put code to receive object here from server
             serverInput = input.readUTF();       //should be fully json ready

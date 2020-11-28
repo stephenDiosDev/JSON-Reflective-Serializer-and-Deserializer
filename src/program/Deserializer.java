@@ -55,26 +55,11 @@ public class Deserializer {
                 String className = allObjects[i].getClass().getSimpleName();
 
                 //ArrayList is [ID][reference value]
-                if(className.equals("ArrayPrimitives")) {
-                    allObjects[i] = stitchReferences(i, references);
-                    result.add(allObjects[i]);
-                }
-                else if(className.equals("ArrayReferences")) {
-                    allObjects[i] = stitchReferences(i, references);
-                    result.add(allObjects[i]);
-                }
-                else if(className.equals("ComplexWithReferences")) {
-
-                    allObjects[i] = stitchReferences(i, references);
-
-                    result.add(allObjects[i]);
-                }
-                else if(className.equals("InstanceJavaCollection")) {
-                    allObjects[i] = stitchReferences(i, references);
-                    result.add(allObjects[i]);
-                }
-                else if(className.equals("AllPrimitive")) {
-                    //since it only holds primitives, we don't need to connect any references
+                if(className.equals("ArrayPrimitives")
+                        || className.equals("ArrayReferences")
+                        || className.equals("ComplexWithReferences")
+                        || className.equals("InstanceJavaCollection")
+                        || className.equals("AllPrimitive")) {
                     allObjects[i] = stitchReferences(i, references);
                     result.add(allObjects[i]);
                 }

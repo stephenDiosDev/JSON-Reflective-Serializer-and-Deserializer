@@ -17,7 +17,7 @@ public class Receiver{
     public static void setupClientConnection() {
         String serverInput = "";
         int port = 7777;
-        String host = "192.168.1.65";
+        String host = "192.168.1.73";
 
         try {
             Socket socket = new Socket(host, port);

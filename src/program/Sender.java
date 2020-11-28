@@ -68,7 +68,7 @@ public class Sender {
         close connection
          */
 
-        int port = 7777;
+        int port = 8888;
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Server socket open, awaiting connections");

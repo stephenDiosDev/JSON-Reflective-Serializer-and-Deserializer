@@ -6,20 +6,19 @@ import java.io.StringReader;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Receiver extends Thread{
-    private String serverInput;
-
+public class Receiver{
     private JsonObject jsonObject;
 
-    public void run() {
-        this.setupClientConnection();
+    public static void main(String[] args) {
+        setupClientConnection();
     }
 
-    public void setupClientConnection() {
+    public static void setupClientConnection() {
+        String serverInput = "";
         int port = 7777;
-
+        String host = "192.168.1.73";
         try {
-            Socket socket = new Socket("localhost", port);
+            Socket socket = new Socket(host, port);
             DataInputStream input = new DataInputStream(socket.getInputStream());
             System.out.println("Client connected on separate thread! Waiting for data...");
 

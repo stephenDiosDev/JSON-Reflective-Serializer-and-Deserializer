@@ -8,11 +8,9 @@ package program;
 
 //below are the 5 object types described on page 3 of the assignment description in order
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
-//TODO clean up the toString outputs for these for more clarity
 /**
  * A class with only primitives as its instance variables
   */

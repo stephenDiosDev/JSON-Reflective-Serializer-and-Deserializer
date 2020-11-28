@@ -262,7 +262,6 @@ public class Visualizer {
             Class[] interfaceList = c.getInterfaces();
             for(int i = 0; i < interfaceList.length; i++) {
                 int newDepth = depth + 1;
-                //inspectClass(interfaceList[i].getClass(), obj, recursive, newDepth);
                 System.out.println(tabs + interfaceList[i].getName());
             }
         }
@@ -313,7 +312,7 @@ public class Visualizer {
                                 for(Object ob : arrayContents) {
                                     System.out.print(tabs + "   Value: ");
                                     try {
-                                        System.out.println(ob.getClass().getName());// + "@" + field.hashCode());
+                                        System.out.println(ob.getClass().getName());
                                     } catch (NullPointerException e) {
                                         System.out.println("null");
                                     }

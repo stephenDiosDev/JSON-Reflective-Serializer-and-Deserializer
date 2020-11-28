@@ -12,8 +12,5 @@ public class ReflectiveObjectSerialization {
         clientThread.start();
         //call sender.run
         sender.sendJson();
-
-        //continue operations on receiver
-        //visualizer
     }
 }

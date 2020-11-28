@@ -31,9 +31,6 @@ public class Receiver extends Thread{
             JsonObject jsonObject = jsonReader.readObject();
             System.out.println("JSON Object received! Closing connection...");
             jsonReader.close();
-            //debug
-            //System.out.println(jsonObject.toString().replace("\\", ""));
-            //System.out.println(serverInput.replace("\\", ""));
 
             input.close();
             socket.close();

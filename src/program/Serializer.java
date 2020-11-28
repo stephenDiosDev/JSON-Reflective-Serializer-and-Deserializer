@@ -1,7 +1,6 @@
 package program;
 
 import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -52,10 +51,6 @@ public class Serializer {
                         else {  //non null reference
                             //serialize the parent
                             Object fieldInstance = field.get(src);
-                            /*
-                            figure out the runtime instance of the field object and send it through serializeObject
-                             */
-
                             jsonStrings.add(serializeObject(fieldInstance, hashMap, jsonStrings));
 
                             int parentID = (int) getKeyByValue(hashMap, fieldInstance.hashCode());

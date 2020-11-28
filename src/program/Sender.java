@@ -4,7 +4,6 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -80,7 +79,7 @@ public class Sender {
             //writes output but also removes the escape slashes that occur during toString()
             //output.writeUTF(jsonObject.toString().replace("\\", ""));
             output.writeUTF(jsonObject.toString());
-
+            output.flush();
             output.close();
             serverSocket.close();
             System.out.println("Server connection closing...");

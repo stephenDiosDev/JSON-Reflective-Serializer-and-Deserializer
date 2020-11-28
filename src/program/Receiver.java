@@ -17,7 +17,8 @@ public class Receiver{
     public static void setupClientConnection() {
         String serverInput = "";
         int port = 7777;
-        String host = "192.168.1.73";
+        String host = "192.168.1.65";
+
         try {
             Socket socket = new Socket(host, port);
             DataInputStream input = new DataInputStream(socket.getInputStream());

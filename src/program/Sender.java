@@ -38,7 +38,6 @@ public class Sender {
         JsonArrayBuilder jsonFieldArray = Json.createArrayBuilder();
 
         for(Object ob : objects) {
-            //jsonFieldArray.add(Serializer.serializeObject(ob, hashMap, jsonStrings));
             jsonStrings.add(Serializer.serializeObject(ob, hashMap, jsonStrings));
         }
 
@@ -54,20 +53,12 @@ public class Sender {
         }
         jsonObjectBuilder.add("objects", jsonFieldArray.build());
         jsonObject = jsonObjectBuilder.build();
-        //System.out.println(jsonObject.toString());    //debug, but not pretty to look at
     }
 
     /**
      * Sends the json object to the receiver
      */
     public void sendJson() {
-        /*
-        Open server connection
-        Wait until the client (receiver) connects
-        Send the jsonObject (which contains EVERYTHING)
-        close connection
-         */
-
         int port = 7777;
         try {
             ServerSocket serverSocket = new ServerSocket(port);
@@ -75,9 +66,6 @@ public class Sender {
             Socket socket = serverSocket.accept();
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
 
-
-            //writes output but also removes the escape slashes that occur during toString()
-            //output.writeUTF(jsonObject.toString().replace("\\", ""));
             output.writeUTF(jsonObject.toString());
             output.flush();
             output.close();

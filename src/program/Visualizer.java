@@ -262,7 +262,6 @@ public class Visualizer {
             Class[] interfaceList = c.getInterfaces();
             for(int i = 0; i < interfaceList.length; i++) {
                 int newDepth = depth + 1;
-                //inspectClass(interfaceList[i].getClass(), obj, recursive, newDepth);
                 System.out.println(tabs + interfaceList[i].getName());
             }
         }
@@ -272,7 +271,6 @@ public class Visualizer {
     }
 
     private static void inspectFields(Class c, Object obj, int depth) {
-        //name, type, modifiers, current value (if reference && recursion == true -> recurse, else not)
         String tabs = "";
         for(int i = 0; i < depth; i++) {
             tabs += "\t";
@@ -313,7 +311,7 @@ public class Visualizer {
                                 for(Object ob : arrayContents) {
                                     System.out.print(tabs + "   Value: ");
                                     try {
-                                        System.out.println(ob.getClass().getName());// + "@" + field.hashCode());
+                                        System.out.println(ob.getClass().getName());
                                     } catch (NullPointerException e) {
                                         System.out.println("null");
                                     }

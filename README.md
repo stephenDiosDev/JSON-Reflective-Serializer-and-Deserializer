@@ -1,3 +1,12 @@
+# Objective
+Using reflection to serialize an object to JSON and then de-serialize from JSON back to an object
+
+## Grade Received
+X/50
+
+Grade not yet received.
+
+
 # CPSC 501 Assignment 3 Report
 Repo Link: https://gitlab.cpsc.ucalgary.ca/stephen.dios/cpsc-501-assignment-3
 

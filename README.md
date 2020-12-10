@@ -2,9 +2,12 @@
 Using reflection to serialize an object to JSON and then de-serialize from JSON back to an object
 
 ## Grade Received
-X/50
+47/50
 
-Grade not yet received.
+- -2 for a bug with arraylist deserialization (duplicate contents)
+- -1 for not having enough variance in primitives in premade objects (I stuck mostly with ints and doubles, but could have added more boolean or char variables)
+
+It is important to note however that my program can process all primitive types, I just didn't set up the premade objects with enough of a difference in primitive types.
 
 
 # CPSC 501 Assignment 3 Report
